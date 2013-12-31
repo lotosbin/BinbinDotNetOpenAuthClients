@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Web;
+using BinbinDotNetOpenAuth.AspNet.Clients.OAuth2;
 using DotNetOpenAuth.AspNet.Clients;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -108,7 +109,11 @@ namespace BinbinDotNetOpenAuth.AspNet
                 using (var textReader = new StreamReader(stream))
                 {
                     string json = textReader.ReadToEnd();
-                    var extraData = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                    var user = JsonConvert.DeserializeObject<WeiboUserData>(json);
+                    var extraData = new Dictionary<string, string>();
+                    extraData.Add("id", user.id);
+                    extraData.Add("name", user.name);
+                    extraData.Add("screen_name", user.screen_name);
                     return extraData;
                 }
             }

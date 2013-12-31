@@ -2,3 +2,4 @@ packages/
 *.suo
 [Bb]in
 [Oo]bj
+*.nupkg
