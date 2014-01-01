@@ -57,7 +57,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         /// <param name="clientSecret">The Google Client Secret</param>
         public QQClient(string clientId, string clientSecret) : this(clientId, clientSecret, new[]
         {
-            "email"
+            "get_user_info"
         })
         {
         }
