@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace BinbinDotNetOpenAuth.AspNet.Clients.OAuth2
+namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
     [DataContract]
     [Serializable]

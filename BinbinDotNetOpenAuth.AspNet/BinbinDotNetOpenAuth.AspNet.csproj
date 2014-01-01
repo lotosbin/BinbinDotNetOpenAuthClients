@@ -66,6 +66,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\HttpContextBaseExtension.cs" />
+    <Compile Include="Clients\OAuth2\QQClient.cs" />
+    <Compile Include="Clients\OAuth2\QQUserData.cs" />
+    <Compile Include="Clients\OAuth2\UriHelper.cs" />
     <Compile Include="Clients\OAuth2\WeiboClient.cs" />
     <Compile Include="Clients\OAuth2\WeiboUserData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
