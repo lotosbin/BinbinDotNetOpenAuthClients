@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
-using System.Net;
-using System.Web;
 using DotNetOpenAuth.AspNet.Clients;
 using log4net;
 using Newtonsoft.Json;
@@ -118,27 +115,33 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             log.Info("GetUserData");
             const string url = "http://gw.api.taobao.com/router/rest";
             //沙箱环境：http://gw.api.tbsandbox.com/router/rest
-            ITopClient myclient = new DefaultTopClient(url, this._clientId, this._clientSecret); //实例化ITopClient类
+            ITopClient myclient = new DefaultTopClient(url, this._clientId, this._clientSecret, "json"); //实例化ITopClient类
             var req = new UserSellerGetRequest
                       {
                           Fields = "nick,user_id,type"
                       }; //实例化具体API对应的Request类
             UserSellerGetResponse rsp = myclient.Execute(req, accessToken); //执行API请求并将该类转换为response对象
-
-            string json = rsp.Body;
             log.Info("response:" + rsp.Body);
-            var data = JsonConvert.DeserializeObject<TaobaoResponseData>(json);
-            var extraData = new Dictionary<string, string>
-                            {
-                                {"id", data.user_seller_get_response.user.uid},
-                                {"name", data.user_seller_get_response.user.nickname},
-                            };
-            return extraData;
+            try
+            {
+                var data = JsonConvert.DeserializeObject<TaobaoResponseData>(rsp.Body);
+                var extraData = new Dictionary<string, string>
+                                {
+                                    {"id", data.user_seller_get_response.user.user_id},
+                                    {"name", data.user_seller_get_response.user.nick},
+                                };
+                return extraData;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Deserialize UserData Failed", ex);
+                throw;
+            }
         }
 
         protected override string QueryAccessToken(Uri returnUrl, string authorizationCode)
         {
-            log.Info("QueryAccessToken");
+            log.Info("QueryAccessToken(authcode:" + authorizationCode + ")");
             var valueCollection = new NameValueCollection
                                   {
                                       {"grant_type", "authorization_code"},
@@ -147,40 +150,14 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
                                       {"client_secret", this._clientSecret},
                                       {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
                                   };
-            string json = OAuthGet(valueCollection);
+            string json = UriHelper.OAuthPost(TokenEndpoint, valueCollection);
+            log.Info("response:" + json);
             if (json == null)
             {
                 return null;
             }
-            log.Info("response:" + json);
-            NameValueCollection results = HttpUtility.ParseQueryString(json);
-            string accessToken = results["code"];
-            return accessToken;
-        }
-
-        private static string OAuthGet(NameValueCollection valueCollection)
-        {
-            Uri uri = UriHelper.BuildUri(TokenEndpoint, valueCollection);
-
-            var webRequest = (HttpWebRequest) WebRequest.Create(uri);
-
-            string json;
-            using (WebResponse webResponse = webRequest.GetResponse())
-            {
-                using (Stream stream = webResponse.GetResponseStream())
-                {
-                    if (stream == null)
-                    {
-                        return null;
-                    }
-
-                    using (var textReader = new StreamReader(stream))
-                    {
-                        json = textReader.ReadToEnd();
-                    }
-                }
-            }
-            return json;
+            var data = JsonConvert.DeserializeObject<TaobaoQueryAccessTokenResponseData>(json);
+            return data.access_token;
         }
     }
 }

@@ -151,47 +151,22 @@ namespace BinbinDotNetOpenAuth.AspNet
 
         protected override string QueryAccessToken(Uri returnUrl, string authorizationCode)
         {
-            NameValueCollection postData = HttpUtility.ParseQueryString(string.Empty);
-            postData.Add(new NameValueCollection
-                         {
-                             {"grant_type", "authorization_code"},
-                             {"code", authorizationCode},
-                             {"client_id", this._clientId},
-                             {"client_secret", this._clientSecret},
-                             {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
-                         });
-
-            var webRequest = (HttpWebRequest) WebRequest.Create(TokenEndpoint);
-
-            webRequest.Method = "POST";
-            webRequest.ContentType = "application/x-www-form-urlencoded";
-
-            using (Stream s = webRequest.GetRequestStream())
+            var collection = new NameValueCollection
+                             {
+                                 {"grant_type", "authorization_code"},
+                                 {"code", authorizationCode},
+                                 {"client_id", this._clientId},
+                                 {"client_secret", this._clientSecret},
+                                 {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
+                             };
+            string response = UriHelper.OAuthPost(TokenEndpoint, collection);
+            if (response == null)
             {
-                using (var sw = new StreamWriter(s))
-                {
-                    sw.Write(postData.ToString());
-                }
+                return null;
             }
-
-            using (WebResponse webResponse = webRequest.GetResponse())
-            {
-                Stream responseStream = webResponse.GetResponseStream();
-                if (responseStream == null)
-                {
-                    return null;
-                }
-
-                using (var reader = new StreamReader(responseStream))
-                {
-                    string response = reader.ReadToEnd();
-                    JObject json = JObject.Parse(response);
-                    var uid = json.Value<string>("uid");
-                    HttpContext.Current.Session["uid"] = uid;
-                    var accessToken = json.Value<string>("access_token");
-                    return accessToken;
-                }
-            }
+            JObject json = JObject.Parse(response);
+            HttpContext.Current.Session["uid"] = json.Value<string>("uid");
+            return json.Value<string>("access_token");
         }
     }
 }

@@ -8,9 +8,9 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
     public class TaobaoUserData
     {
         [DataMember]
-        public string uid { get; set; }
+        public string user_id { get; set; }
 
         [DataMember]
-        public string nickname { get; set; }
+        public string nick { get; set; }
     }
 }

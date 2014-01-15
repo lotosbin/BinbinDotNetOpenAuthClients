@@ -89,6 +89,7 @@
     <Compile Include="Clients\OAuth2\QQClient.cs" />
     <Compile Include="Clients\OAuth2\QQUserData.cs" />
     <Compile Include="Clients\OAuth2\TaobaoClient.cs" />
+    <Compile Include="Clients\OAuth2\TaobaoQueryAccessTokenResponseData.cs" />
     <Compile Include="Clients\OAuth2\TaobaoResponseData.cs" />
     <Compile Include="Clients\OAuth2\TaobaoUserData.cs" />
     <Compile Include="Clients\OAuth2\UriHelper.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="BinbinDotNetOpenAuth.AspNet.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
