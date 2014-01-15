@@ -1,38 +1,34 @@
-锘縰sing System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
-using System.Net;
-using System.Web;
-using BinbinDotNetOpenAuth.AspNet.Clients;
 using DotNetOpenAuth.AspNet.Clients;
+using log4net;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Top.Api;
+using Top.Api.Request;
+using Top.Api.Response;
 
-namespace BinbinDotNetOpenAuth.AspNet
+namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
     /// <summary>
     ///     A DotNetOpenAuth client for logging in to Google using OAuth2.
     ///     Reference: https://developers.google.com/accounts/docs/OAuth2
     /// </summary>
-    public class WeiboClient : OAuth2Client
+    public class TaobaoClient : OAuth2Client
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof (TaobaoClient));
+
         #region Constants and Fields
 
         /// <summary>
         ///     The authorization endpoint.
         /// </summary>
-        private const string AuthorizationEndpoint = "https://api.weibo.com/oauth2/authorize";
+        private const string AuthorizationEndpoint = "https://oauth.taobao.com/authorize";
 
         /// <summary>
         ///     The token endpoint.
         /// </summary>
-        private const string TokenEndpoint = "https://api.weibo.com/oauth2/access_token";
-
-        /// <summary>
-        ///     The user info endpoint.
-        /// </summary>
-        private const string UserInfoEndpoint = "https://api.weibo.com/2/users/show.json";
+        private const string TokenEndpoint = "https://oauth.taobao.com/token";
 
         /// <summary>
         ///     The _app id.
@@ -56,7 +52,7 @@ namespace BinbinDotNetOpenAuth.AspNet
         /// </summary>
         /// <param name="clientId">The Google Client Id</param>
         /// <param name="clientSecret">The Google Client Secret</param>
-        public WeiboClient(string clientId, string clientSecret)
+        public TaobaoClient(string clientId, string clientSecret)
             : this(clientId, clientSecret, new[]
                                            {
                                                "email"
@@ -70,8 +66,8 @@ namespace BinbinDotNetOpenAuth.AspNet
         /// <param name="clientId">The Google Client Id</param>
         /// <param name="clientSecret">The Google Client Secret</param>
         /// <param name="requestedScopes">One or more requested scopes, passed without the base URI.</param>
-        public WeiboClient(string clientId, string clientSecret, params string[] requestedScopes)
-            : base("weibo")
+        public TaobaoClient(string clientId, string clientSecret, params string[] requestedScopes)
+            : base("taobao")
         {
             if (string.IsNullOrWhiteSpace(clientId))
             {
@@ -100,6 +96,7 @@ namespace BinbinDotNetOpenAuth.AspNet
 
         protected override Uri GetServiceLoginUrl(Uri returnUrl)
         {
+            log.Info("GetServiceLoginUrl");
             IEnumerable<string> scopes = this._requestedScopes;
             string state = string.IsNullOrEmpty(returnUrl.Query) ? string.Empty : returnUrl.Query.Substring(1);
 
@@ -115,58 +112,52 @@ namespace BinbinDotNetOpenAuth.AspNet
 
         protected override IDictionary<string, string> GetUserData(string accessToken)
         {
-            var uid = (string) HttpContext.Current.Session["uid"];
-            Uri uri = UriHelper.BuildUri(UserInfoEndpoint, new NameValueCollection
-                                                           {
-                                                               {"access_token", accessToken},
-                                                               {"uid", uid}
-                                                           });
-
-            var webRequest = (HttpWebRequest) WebRequest.Create(uri);
-
-            using (WebResponse webResponse = webRequest.GetResponse())
+            log.Info("GetUserData");
+            const string url = "http://gw.api.taobao.com/router/rest";
+            //沙箱环境：http://gw.api.tbsandbox.com/router/rest
+            ITopClient myclient = new DefaultTopClient(url, this._clientId, this._clientSecret, "json"); //实例化ITopClient类
+            var req = new UserSellerGetRequest
+                      {
+                          Fields = "nick,user_id,type"
+                      }; //实例化具体API对应的Request类
+            UserSellerGetResponse rsp = myclient.Execute(req, accessToken); //执行API请求并将该类转换为response对象
+            log.Info("response:" + rsp.Body);
+            try
             {
-                using (Stream stream = webResponse.GetResponseStream())
-                {
-                    if (stream == null)
-                    {
-                        return null;
-                    }
-
-                    using (var textReader = new StreamReader(stream))
-                    {
-                        string json = textReader.ReadToEnd();
-                        var user = JsonConvert.DeserializeObject<WeiboUserData>(json);
-                        var extraData = new Dictionary<string, string>
-                                        {
-                                            {"id", user.id},
-                                            {"name", user.name},
-                                            {"screen_name", user.screen_name}
-                                        };
-                        return extraData;
-                    }
-                }
+                var data = JsonConvert.DeserializeObject<TaobaoResponseData>(rsp.Body);
+                var extraData = new Dictionary<string, string>
+                                {
+                                    {"id", data.user_seller_get_response.user.user_id},
+                                    {"name", data.user_seller_get_response.user.nick},
+                                };
+                return extraData;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Deserialize UserData Failed", ex);
+                throw;
             }
         }
 
         protected override string QueryAccessToken(Uri returnUrl, string authorizationCode)
         {
-            var collection = new NameValueCollection
-                             {
-                                 {"grant_type", "authorization_code"},
-                                 {"code", authorizationCode},
-                                 {"client_id", this._clientId},
-                                 {"client_secret", this._clientSecret},
-                                 {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
-                             };
-            string response = UriHelper.OAuthPost(TokenEndpoint, collection);
-            if (response == null)
+            log.Info("QueryAccessToken(authcode:" + authorizationCode + ")");
+            var valueCollection = new NameValueCollection
+                                  {
+                                      {"grant_type", "authorization_code"},
+                                      {"code", authorizationCode},
+                                      {"client_id", this._clientId},
+                                      {"client_secret", this._clientSecret},
+                                      {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
+                                  };
+            string json = UriHelper.OAuthPost(TokenEndpoint, valueCollection);
+            log.Info("response:" + json);
+            if (json == null)
             {
                 return null;
             }
-            JObject json = JObject.Parse(response);
-            HttpContext.Current.Session["uid"] = json.Value<string>("uid");
-            return json.Value<string>("access_token");
+            var data = JsonConvert.DeserializeObject<TaobaoQueryAccessTokenResponseData>(json);
+            return data.access_token;
         }
     }
 }
