@@ -5,8 +5,8 @@ using System.IO;
 using System.Net;
 using System.Web;
 using DotNetOpenAuth.AspNet.Clients;
+using log4net;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Top.Api;
 using Top.Api.Request;
 using Top.Api.Response;
@@ -19,6 +19,8 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
     /// </summary>
     public class TaobaoClient : OAuth2Client
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof (TaobaoClient));
+
         #region Constants and Fields
 
         /// <summary>
@@ -30,11 +32,6 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         ///     The token endpoint.
         /// </summary>
         private const string TokenEndpoint = "https://oauth.taobao.com/token";
-
-        /// <summary>
-        ///     The user info endpoint.
-        /// </summary>
-        private const string UserInfoEndpoint = "https://graph.qq.com/user/get_user_info";
 
         /// <summary>
         ///     The _app id.
@@ -102,6 +99,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 
         protected override Uri GetServiceLoginUrl(Uri returnUrl)
         {
+            log.Info("GetServiceLoginUrl");
             IEnumerable<string> scopes = this._requestedScopes;
             string state = string.IsNullOrEmpty(returnUrl.Query) ? string.Empty : returnUrl.Query.Substring(1);
 
@@ -117,7 +115,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 
         protected override IDictionary<string, string> GetUserData(string accessToken)
         {
-            var uid = (string) HttpContext.Current.Session["uid"];
+            log.Info("GetUserData");
             const string url = "http://gw.api.taobao.com/router/rest";
             //沙箱环境：http://gw.api.tbsandbox.com/router/rest
             ITopClient myclient = new DefaultTopClient(url, this._clientId, this._clientSecret); //实例化ITopClient类
@@ -128,10 +126,11 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             UserSellerGetResponse rsp = myclient.Execute(req, accessToken); //执行API请求并将该类转换为response对象
 
             string json = rsp.Body;
+            log.Info("response:" + rsp.Body);
             var data = JsonConvert.DeserializeObject<TaobaoResponseData>(json);
             var extraData = new Dictionary<string, string>
                             {
-                                {"id", uid},
+                                {"id", data.user_seller_get_response.user.uid},
                                 {"name", data.user_seller_get_response.user.nickname},
                             };
             return extraData;
@@ -139,6 +138,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 
         protected override string QueryAccessToken(Uri returnUrl, string authorizationCode)
         {
+            log.Info("QueryAccessToken");
             var valueCollection = new NameValueCollection
                                   {
                                       {"grant_type", "authorization_code"},
@@ -152,10 +152,9 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             {
                 return null;
             }
+            log.Info("response:" + json);
             NameValueCollection results = HttpUtility.ParseQueryString(json);
-            string accessToken = results["access_token"];
-
-            HttpContext.Current.Session["uid"] = this.GetOpenId(accessToken);
+            string accessToken = results["code"];
             return accessToken;
         }
 
@@ -182,60 +181,6 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
                 }
             }
             return json;
-        }
-
-        private object GetOpenId(string accessToken)
-        {
-            try
-            {
-                NameValueCollection postData = HttpUtility.ParseQueryString(string.Empty);
-                postData.Add(new NameValueCollection
-                             {
-                                 {"access_token", accessToken},
-                             });
-
-                var webRequest = (HttpWebRequest) WebRequest.Create("https://graph.qq.com/oauth2.0/me");
-
-                webRequest.Method = "POST";
-                webRequest.ContentType = "application/x-www-form-urlencoded";
-
-                using (Stream s = webRequest.GetRequestStream())
-                {
-                    using (var sw = new StreamWriter(s))
-                    {
-                        sw.Write(postData.ToString());
-                    }
-                }
-
-                string openid = null;
-                using (WebResponse webResponse = webRequest.GetResponse())
-                {
-                    Stream responseStream = webResponse.GetResponseStream();
-                    if (responseStream == null)
-                    {
-                        return null;
-                    }
-
-                    using (var reader = new StreamReader(responseStream))
-                    {
-                        string response = reader.ReadToEnd(); //callback( {"client_id":"YOUR_APPID","openid":"YOUR_OPENID"} ); 
-                        if (response.StartsWith("callback("))
-                        {
-                            int start = response.IndexOf('{');
-                            int end = response.IndexOf('}');
-                            string jsontext = response.Substring(start, end - start + 1); // {"client_id":"YOUR_APPID","openid":"YOUR_OPENID"} 
-                            JObject json = JObject.Parse(jsontext);
-                            openid = json.Value<string>("openid");
-                        }
-                    }
-                }
-
-                return openid;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("QQClient.GetOpenId error", ex);
-            }
         }
     }
 }
