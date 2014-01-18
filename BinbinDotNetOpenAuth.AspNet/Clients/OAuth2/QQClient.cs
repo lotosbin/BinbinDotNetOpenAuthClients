@@ -36,12 +36,12 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         /// <summary>
         ///     The _app id.
         /// </summary>
-        private readonly string _clientId;
+        protected readonly string _clientId;
 
         /// <summary>
         ///     The _app secret.
         /// </summary>
-        private readonly string _clientSecret;
+        protected readonly string _clientSecret;
 
         /// <summary>
         ///     The requested scopes.
@@ -102,50 +102,34 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             IEnumerable<string> scopes = this._requestedScopes;
             string state = string.IsNullOrEmpty(returnUrl.Query) ? string.Empty : returnUrl.Query.Substring(1);
 
-            return UriHelper.BuildUri(AuthorizationEndpoint, new NameValueCollection
-                                                             {
-                                                                 {"response_type", "code"},
-                                                                 {"client_id", this._clientId},
-                                                                 {"scope", string.Join(" ", scopes)},
-                                                                 {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
-                                                                 {"state", state},
-                                                             });
+            var collection = new NameValueCollection
+                             {
+                                 {"response_type", "code"},
+                                 {"client_id", this._clientId},
+                                 {"scope", string.Join(" ", scopes)},
+                                 {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
+                                 {"state", state},
+                             };
+            return UriHelper.BuildUri(AuthorizationEndpoint, collection);
         }
 
         protected override IDictionary<string, string> GetUserData(string accessToken)
         {
             var uid = (string) HttpContext.Current.Session["uid"];
-            Uri uri = UriHelper.BuildUri(UserInfoEndpoint, new NameValueCollection
-                                                           {
-                                                               {"access_token", accessToken},
-                                                               {"oauth_consumer_key", this._clientId},
-                                                               {"openid", uid}
-                                                           });
-
-            var webRequest = (HttpWebRequest) WebRequest.Create(uri);
-
-            using (WebResponse webResponse = webRequest.GetResponse())
-            {
-                using (Stream stream = webResponse.GetResponseStream())
-                {
-                    if (stream == null)
-                    {
-                        return null;
-                    }
-
-                    using (var textReader = new StreamReader(stream))
-                    {
-                        string json = textReader.ReadToEnd();
-                        var user = JsonConvert.DeserializeObject<QQUserData>(json);
-                        var extraData = new Dictionary<string, string>
-                                        {
-                                            {"id", uid},
-                                            {"name", user.nickname},
-                                        };
-                        return extraData;
-                    }
-                }
-            }
+            var collection = new NameValueCollection
+                             {
+                                 {"access_token", accessToken},
+                                 {"oauth_consumer_key", this._clientId},
+                                 {"openid", uid}
+                             };
+            string json = UriHelper.OAuthGet(UserInfoEndpoint, collection);
+            var user = JsonConvert.DeserializeObject<QQUserData>(json);
+            var extraData = new Dictionary<string, string>
+                            {
+                                {"id", uid},
+                                {"name", user.nickname},
+                            };
+            return extraData;
         }
 
         protected override string QueryAccessToken(Uri returnUrl, string authorizationCode)
@@ -158,7 +142,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
                                       {"client_secret", this._clientSecret},
                                       {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
                                   };
-            string json = OAuthGet(valueCollection);
+            string json = UriHelper.OAuthGet(TokenEndpoint, valueCollection);
             if (json == null)
             {
                 return null;
@@ -170,30 +154,6 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             return accessToken;
         }
 
-        private static string OAuthGet(NameValueCollection valueCollection)
-        {
-            Uri uri = UriHelper.BuildUri(TokenEndpoint, valueCollection);
-
-            var webRequest = (HttpWebRequest) WebRequest.Create(uri);
-
-            string json;
-            using (WebResponse webResponse = webRequest.GetResponse())
-            {
-                using (Stream stream = webResponse.GetResponseStream())
-                {
-                    if (stream == null)
-                    {
-                        return null;
-                    }
-
-                    using (var textReader = new StreamReader(stream))
-                    {
-                        json = textReader.ReadToEnd();
-                    }
-                }
-            }
-            return json;
-        }
 
         private object GetOpenId(string accessToken)
         {

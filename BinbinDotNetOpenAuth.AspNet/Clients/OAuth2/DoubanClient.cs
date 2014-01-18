@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
-using System.Net;
 using DotNetOpenAuth.AspNet.Clients;
+using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -11,6 +10,8 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
     public class DoubanClient : OAuth2Client
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof (DoubanClient));
+
         #region Constants and Fields
 
         /// <summary>
@@ -31,12 +32,12 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         /// <summary>
         ///     The _app id.
         /// </summary>
-        private readonly string _clientId;
+        protected readonly string _clientId;
 
         /// <summary>
         ///     The _app secret.
         /// </summary>
-        private readonly string _clientSecret;
+        protected readonly string _clientSecret;
 
         /// <summary>
         ///     The requested scopes.
@@ -94,54 +95,42 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 
         protected override Uri GetServiceLoginUrl(Uri returnUrl)
         {
+            log.Info("GetServiceLoginUrl");
             IEnumerable<string> scopes = this._requestedScopes;
             string state = string.IsNullOrEmpty(returnUrl.Query) ? string.Empty : returnUrl.Query.Substring(1);
 
-            return UriHelper.BuildUri(AuthorizationEndpoint, new NameValueCollection
-                                                             {
-                                                                 {"response_type", "code"},
-                                                                 {"client_id", this._clientId},
-                                                                 {"scope", string.Join(" ", scopes)},
-                                                                 {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
-                                                                 {"state", state},
-                                                             });
+            Uri uri = UriHelper.BuildUri(AuthorizationEndpoint, new NameValueCollection
+                                                                {
+                                                                    {"response_type", "code"},
+                                                                    {"client_id", this._clientId},
+                                                                    {"scope", string.Join(" ", scopes)},
+                                                                    {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
+                                                                    {"state", state},
+                                                                });
+            return uri;
         }
 
         protected override IDictionary<string, string> GetUserData(string accessToken)
         {
-            Uri uri = UriHelper.BuildUri(UserInfoEndpoint, new NameValueCollection
-                                                           {
-                                                               {"access_token", accessToken},
-                                                           });
-
-            var webRequest = (HttpWebRequest) WebRequest.Create(uri);
-
-            using (WebResponse webResponse = webRequest.GetResponse())
-            {
-                using (Stream stream = webResponse.GetResponseStream())
-                {
-                    if (stream == null)
-                    {
-                        return null;
-                    }
-
-                    using (var textReader = new StreamReader(stream))
-                    {
-                        string json = textReader.ReadToEnd();
-                        var user = JsonConvert.DeserializeObject<DoubanUserData>(json);
-                        var extraData = new Dictionary<string, string>
-                                        {
-                                            {"id", user.id},
-                                            {"name", user.name},
-                                        };
-                        return extraData;
-                    }
-                }
-            }
+            log.Info("GetUserData");
+            var collection = new NameValueCollection
+                             {
+                                 {"access_token", accessToken},
+                             };
+            string json = UriHelper.OAuthGet(UserInfoEndpoint, collection);
+            log.Info("response:" + json);
+            var user = JsonConvert.DeserializeObject<DoubanUserData>(json);
+            var extraData = new Dictionary<string, string>
+                            {
+                                {"id", user.id},
+                                {"name", user.name},
+                            };
+            return extraData;
         }
 
         protected override string QueryAccessToken(Uri returnUrl, string authorizationCode)
         {
+            log.Info("QueryAccessToken(authcode:" + authorizationCode + ")");
             var collection = new NameValueCollection
                              {
                                  {"grant_type", "authorization_code"},
@@ -151,6 +140,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
                                  {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
                              };
             string response = UriHelper.OAuthPost(TokenEndpoint, collection);
+            log.Info("response:" + response);
             if (response == null)
             {
                 return null;

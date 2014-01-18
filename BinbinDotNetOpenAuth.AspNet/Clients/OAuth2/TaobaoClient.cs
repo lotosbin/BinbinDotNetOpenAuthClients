@@ -33,12 +33,12 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         /// <summary>
         ///     The _app id.
         /// </summary>
-        private readonly string _clientId;
+        protected readonly string _clientId;
 
         /// <summary>
         ///     The _app secret.
         /// </summary>
-        private readonly string _clientSecret;
+        protected readonly string _clientSecret;
 
         /// <summary>
         ///     The requested scopes.
@@ -100,14 +100,15 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             IEnumerable<string> scopes = this._requestedScopes;
             string state = string.IsNullOrEmpty(returnUrl.Query) ? string.Empty : returnUrl.Query.Substring(1);
 
-            return UriHelper.BuildUri(AuthorizationEndpoint, new NameValueCollection
-                                                             {
-                                                                 {"response_type", "code"},
-                                                                 {"client_id", this._clientId},
-                                                                 {"scope", string.Join(" ", scopes)},
-                                                                 {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
-                                                                 {"state", state},
-                                                             });
+            var collection = new NameValueCollection
+                                      {
+                                          {"response_type", "code"},
+                                          {"client_id", this._clientId},
+                                          {"scope", string.Join(" ", scopes)},
+                                          {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
+                                          {"state", state},
+                                      };
+            return UriHelper.BuildUri(AuthorizationEndpoint, collection);
         }
 
         protected override IDictionary<string, string> GetUserData(string accessToken)

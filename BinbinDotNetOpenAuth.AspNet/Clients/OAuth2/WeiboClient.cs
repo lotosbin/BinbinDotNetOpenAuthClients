@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
-using System.Net;
 using System.Web;
-using BinbinDotNetOpenAuth.AspNet.Clients;
 using DotNetOpenAuth.AspNet.Clients;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace BinbinDotNetOpenAuth.AspNet
+namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
     /// <summary>
     ///     A DotNetOpenAuth client for logging in to Google using OAuth2.
@@ -37,12 +34,12 @@ namespace BinbinDotNetOpenAuth.AspNet
         /// <summary>
         ///     The _app id.
         /// </summary>
-        private readonly string _clientId;
+        protected readonly string _clientId;
 
         /// <summary>
         ///     The _app secret.
         /// </summary>
-        private readonly string _clientSecret;
+        protected readonly string _clientSecret;
 
         /// <summary>
         ///     The requested scopes.
@@ -103,50 +100,34 @@ namespace BinbinDotNetOpenAuth.AspNet
             IEnumerable<string> scopes = this._requestedScopes;
             string state = string.IsNullOrEmpty(returnUrl.Query) ? string.Empty : returnUrl.Query.Substring(1);
 
-            return UriHelper.BuildUri(AuthorizationEndpoint, new NameValueCollection
-                                                             {
-                                                                 {"response_type", "code"},
-                                                                 {"client_id", this._clientId},
-                                                                 {"scope", string.Join(" ", scopes)},
-                                                                 {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
-                                                                 {"state", state},
-                                                             });
+            var collection = new NameValueCollection
+                             {
+                                 {"response_type", "code"},
+                                 {"client_id", this._clientId},
+                                 {"scope", string.Join(" ", scopes)},
+                                 {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
+                                 {"state", state},
+                             };
+            return UriHelper.BuildUri(AuthorizationEndpoint, collection);
         }
 
         protected override IDictionary<string, string> GetUserData(string accessToken)
         {
             var uid = (string) HttpContext.Current.Session["uid"];
-            Uri uri = UriHelper.BuildUri(UserInfoEndpoint, new NameValueCollection
-                                                           {
-                                                               {"access_token", accessToken},
-                                                               {"uid", uid}
-                                                           });
-
-            var webRequest = (HttpWebRequest) WebRequest.Create(uri);
-
-            using (WebResponse webResponse = webRequest.GetResponse())
-            {
-                using (Stream stream = webResponse.GetResponseStream())
-                {
-                    if (stream == null)
-                    {
-                        return null;
-                    }
-
-                    using (var textReader = new StreamReader(stream))
-                    {
-                        string json = textReader.ReadToEnd();
-                        var user = JsonConvert.DeserializeObject<WeiboUserData>(json);
-                        var extraData = new Dictionary<string, string>
-                                        {
-                                            {"id", user.id},
-                                            {"name", user.name},
-                                            {"screen_name", user.screen_name}
-                                        };
-                        return extraData;
-                    }
-                }
-            }
+            var collection = new NameValueCollection
+                             {
+                                 {"access_token", accessToken},
+                                 {"uid", uid}
+                             };
+            string json = UriHelper.OAuthGet(UserInfoEndpoint, collection);
+            var user = JsonConvert.DeserializeObject<WeiboUserData>(json);
+            var extraData = new Dictionary<string, string>
+                            {
+                                {"id", user.id},
+                                {"name", user.name},
+                                {"screen_name", user.screen_name}
+                            };
+            return extraData;
         }
 
         protected override string QueryAccessToken(Uri returnUrl, string authorizationCode)
