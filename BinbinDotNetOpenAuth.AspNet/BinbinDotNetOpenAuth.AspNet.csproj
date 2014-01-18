@@ -86,6 +86,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\HttpContextBaseExtension.cs" />
+    <Compile Include="Clients\OAuth2\DoubanClient.cs" />
+    <Compile Include="Clients\OAuth2\DoubanScopes.cs" />
+    <Compile Include="Clients\OAuth2\DoubanUserData.cs" />
     <Compile Include="Clients\OAuth2\QQClient.cs" />
     <Compile Include="Clients\OAuth2\QQUserData.cs" />
     <Compile Include="Clients\OAuth2\TaobaoClient.cs" />
@@ -99,6 +102,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="BinbinDotNetOpenAuth.AspNet.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
