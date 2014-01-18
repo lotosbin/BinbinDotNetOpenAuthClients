@@ -10,7 +10,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
     public class DoubanClient : OAuth2Client
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof (DoubanClient));
+        private static readonly ILog log = LogManager.GetLogger(typeof(DoubanClient));
 
         #region Constants and Fields
 
@@ -113,11 +113,8 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         protected override IDictionary<string, string> GetUserData(string accessToken)
         {
             log.Info("GetUserData");
-            var collection = new NameValueCollection
-                             {
-                                 {"access_token", accessToken},
-                             };
-            string json = UriHelper.OAuthGet(UserInfoEndpoint, collection);
+            var collection = new NameValueCollection();
+            string json = UriHelper.OAuthGetWithHeader(UserInfoEndpoint, collection, accessToken);
             log.Info("response:" + json);
             var user = JsonConvert.DeserializeObject<DoubanUserData>(json);
             var extraData = new Dictionary<string, string>

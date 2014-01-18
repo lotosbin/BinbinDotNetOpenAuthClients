@@ -12,7 +12,10 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         {
             NameValueCollection q = HttpUtility.ParseQueryString(String.Empty);
             q.Add(queryParameters);
-            var builder = new UriBuilder(baseUri) {Query = q.ToString()};
+            var builder = new UriBuilder(baseUri)
+                          {
+                              Query = q.ToString()
+                          };
             return builder.Uri;
         }
 
@@ -57,6 +60,31 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 
             var webRequest = (HttpWebRequest) WebRequest.Create(uri);
 
+            string json;
+            using (WebResponse webResponse = webRequest.GetResponse())
+            {
+                using (Stream stream = webResponse.GetResponseStream())
+                {
+                    if (stream == null)
+                    {
+                        return null;
+                    }
+
+                    using (var textReader = new StreamReader(stream))
+                    {
+                        json = textReader.ReadToEnd();
+                    }
+                }
+            }
+            return json;
+        }
+
+        internal static string OAuthGetWithHeader(string endpoint, NameValueCollection valueCollection, string accessToken)
+        {
+            Uri uri = BuildUri(endpoint, valueCollection);
+
+            var webRequest = (HttpWebRequest) WebRequest.Create(uri);
+            webRequest.Headers.Add("Authorization", "Bearer " + accessToken);
             string json;
             using (WebResponse webResponse = webRequest.GetResponse())
             {
