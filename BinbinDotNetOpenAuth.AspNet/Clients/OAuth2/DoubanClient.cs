@@ -1,35 +1,33 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Web;
 using DotNetOpenAuth.AspNet.Clients;
+using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
-    /// <summary>
-    ///     A DotNetOpenAuth client for logging in to Google using OAuth2.
-    ///     Reference: https://developers.google.com/accounts/docs/OAuth2
-    /// </summary>
-    public class WeiboClient : OAuth2Client
+    public class DoubanClient : OAuth2Client
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof (DoubanClient));
+
         #region Constants and Fields
 
         /// <summary>
         ///     The authorization endpoint.
         /// </summary>
-        private const string AuthorizationEndpoint = "https://api.weibo.com/oauth2/authorize";
+        private const string AuthorizationEndpoint = "https://www.douban.com/service/auth2/auth";
 
         /// <summary>
         ///     The token endpoint.
         /// </summary>
-        private const string TokenEndpoint = "https://api.weibo.com/oauth2/access_token";
+        private const string TokenEndpoint = "https://www.douban.com/service/auth2/token";
 
         /// <summary>
         ///     The user info endpoint.
         /// </summary>
-        private const string UserInfoEndpoint = "https://api.weibo.com/2/users/show.json";
+        private const string UserInfoEndpoint = "https://api.douban.com/v2/user/~me";
 
         /// <summary>
         ///     The _app id.
@@ -53,10 +51,10 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         /// </summary>
         /// <param name="clientId">The Google Client Id</param>
         /// <param name="clientSecret">The Google Client Secret</param>
-        public WeiboClient(string clientId, string clientSecret)
+        public DoubanClient(string clientId, string clientSecret)
             : this(clientId, clientSecret, new[]
                                            {
-                                               "email"
+                                               "douban_basic_common"
                                            })
         {
         }
@@ -67,8 +65,8 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         /// <param name="clientId">The Google Client Id</param>
         /// <param name="clientSecret">The Google Client Secret</param>
         /// <param name="requestedScopes">One or more requested scopes, passed without the base URI.</param>
-        public WeiboClient(string clientId, string clientSecret, params string[] requestedScopes)
-            : base("weibo")
+        public DoubanClient(string clientId, string clientSecret, params string[] requestedScopes)
+            : base("douban")
         {
             if (string.IsNullOrWhiteSpace(clientId))
             {
@@ -97,41 +95,42 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 
         protected override Uri GetServiceLoginUrl(Uri returnUrl)
         {
+            log.Info("GetServiceLoginUrl");
             IEnumerable<string> scopes = this._requestedScopes;
             string state = string.IsNullOrEmpty(returnUrl.Query) ? string.Empty : returnUrl.Query.Substring(1);
 
-            var collection = new NameValueCollection
-                             {
-                                 {"response_type", "code"},
-                                 {"client_id", this._clientId},
-                                 {"scope", string.Join(" ", scopes)},
-                                 {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
-                                 {"state", state},
-                             };
-            return UriHelper.BuildUri(AuthorizationEndpoint, collection);
+            Uri uri = UriHelper.BuildUri(AuthorizationEndpoint, new NameValueCollection
+                                                                {
+                                                                    {"response_type", "code"},
+                                                                    {"client_id", this._clientId},
+                                                                    {"scope", string.Join(" ", scopes)},
+                                                                    {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
+                                                                    {"state", state},
+                                                                });
+            return uri;
         }
 
         protected override IDictionary<string, string> GetUserData(string accessToken)
         {
-            var uid = (string) HttpContext.Current.Session["uid"];
+            log.Info("GetUserData");
             var collection = new NameValueCollection
                              {
                                  {"access_token", accessToken},
-                                 {"uid", uid}
                              };
             string json = UriHelper.OAuthGet(UserInfoEndpoint, collection);
-            var user = JsonConvert.DeserializeObject<WeiboUserData>(json);
+            log.Info("response:" + json);
+            var user = JsonConvert.DeserializeObject<DoubanUserData>(json);
             var extraData = new Dictionary<string, string>
                             {
                                 {"id", user.id},
                                 {"name", user.name},
-                                {"screen_name", user.screen_name}
                             };
             return extraData;
         }
 
         protected override string QueryAccessToken(Uri returnUrl, string authorizationCode)
         {
+            log.Info("QueryAccessToken(authcode:" + authorizationCode + ")");
             var collection = new NameValueCollection
                              {
                                  {"grant_type", "authorization_code"},
@@ -141,12 +140,13 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
                                  {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
                              };
             string response = UriHelper.OAuthPost(TokenEndpoint, collection);
+            log.Info("response:" + response);
             if (response == null)
             {
                 return null;
             }
             JObject json = JObject.Parse(response);
-            HttpContext.Current.Session["uid"] = json.Value<string>("uid");
+            //HttpContext.Current.Session["uid"] = json.Value<string>("douban_user_id");
             return json.Value<string>("access_token");
         }
     }
