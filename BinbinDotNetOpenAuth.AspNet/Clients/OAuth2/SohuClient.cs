@@ -99,6 +99,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 
         protected override Uri GetServiceLoginUrl(Uri returnUrl)
         {
+            log.Info("GetServiceLoginUrl");
             IEnumerable<string> scopes = this._requestedScopes;
             string state = string.IsNullOrEmpty(returnUrl.Query) ? string.Empty : returnUrl.Query.Substring(1);
 
@@ -115,12 +116,14 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 
         protected override IDictionary<string, string> GetUserData(string accessToken)
         {
+            log.Info("GetUserData");
             var uid = (string) HttpContext.Current.Session["uid"];
             var collection = new NameValueCollection
                              {
                                  {"access_token", accessToken},
                              };
             string json = UriHelper.OAuthGet(UserInfoEndpoint, collection);
+            log.Info("response:" + json);
             var result = JsonConvert.DeserializeObject<GetUserDataResult>(json);
             if (result.status != "10200")
             {
@@ -136,6 +139,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 
         protected override string QueryAccessToken(Uri returnUrl, string authorizationCode)
         {
+            log.Info("QueryAccessToken(authcode:" + authorizationCode + ")");
             var valueCollection = new NameValueCollection
                                   {
                                       {"grant_type", "authorization_code"},
@@ -145,14 +149,15 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
                                       {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
                                   };
             string json = UriHelper.OAuthGet(TokenEndpoint, valueCollection);
+            log.Info("response:" + json);
             if (json == null)
             {
                 return null;
             }
-            NameValueCollection results = HttpUtility.ParseQueryString(json);
-            string accessToken = results["access_token"];
+            var data = JsonConvert.DeserializeObject<QueryAccessTokenResponseData>(json);
+            string accessToken = data.access_token;
 
-            HttpContext.Current.Session["uid"] = results["open_id"];
+            HttpContext.Current.Session["uid"] = data.open_id;
             return accessToken;
         }
 
@@ -185,6 +190,17 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
                 [DataMember]
                 public string uniqname { get; set; }
             }
+        }
+
+        [DataContract]
+        [Serializable]
+        public class QueryAccessTokenResponseData
+        {
+            [DataMember]
+            public string access_token { get; set; }
+
+            [DataMember]
+            public string open_id { get; set; }
         }
     }
 }
