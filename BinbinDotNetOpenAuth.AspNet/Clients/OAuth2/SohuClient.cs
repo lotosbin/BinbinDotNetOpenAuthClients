@@ -154,10 +154,10 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             {
                 return null;
             }
-            NameValueCollection results = HttpUtility.ParseQueryString(json);
-            string accessToken = results["access_token"];
+            var data = JsonConvert.DeserializeObject<QueryAccessTokenResponseData>(json);
+            string accessToken = data.access_token;
 
-            HttpContext.Current.Session["uid"] = results["open_id"];
+            HttpContext.Current.Session["uid"] = data.open_id;
             return accessToken;
         }
 
@@ -190,6 +190,17 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
                 [DataMember]
                 public string uniqname { get; set; }
             }
+        }
+
+        [DataContract]
+        [Serializable]
+        public class QueryAccessTokenResponseData
+        {
+            [DataMember]
+            public string access_token { get; set; }
+
+            [DataMember]
+            public string open_id { get; set; }
         }
     }
 }
