@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\HttpContextBaseExtension.cs" />
+    <Compile Include="Clients\OAuth2\BaiduClient.cs" />
     <Compile Include="Clients\OAuth2\KaixinClient.cs" />
     <Compile Include="Clients\OAuth2\RenrenClient.cs" />
     <Compile Include="Clients\OAuth2\DoubanClient.cs" />
