@@ -2,33 +2,32 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Runtime.Serialization;
-using System.Web;
 using DotNetOpenAuth.AspNet.Clients;
 using log4net;
 using Newtonsoft.Json;
 
 namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
-    public class RenrenClient : OAuth2Client
+    public class KaixinClient : OAuth2Client
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof (RenrenClient));
+        private static readonly ILog log = LogManager.GetLogger(typeof (KaixinClient));
 
         #region Constants and Fields
 
         /// <summary>
         ///     The authorization endpoint.
         /// </summary>
-        private const string AuthorizationEndpoint = "https://graph.renren.com/oauth/authorize";
+        private const string AuthorizationEndpoint = "http://api.kaixin001.com/oauth2/authorize";
 
         /// <summary>
         ///     The token endpoint.
         /// </summary>
-        private const string TokenEndpoint = "https://graph.renren.com/oauth/token";
+        private const string TokenEndpoint = "https://api.kaixin001.com/oauth2/access_token";
 
         /// <summary>
         ///     The user info endpoint.
         /// </summary>
-        private const string UserInfoEndpoint = "https://api.renren.com/v2/user/login/get";
+        private const string UserInfoEndpoint = "https://api.kaixin001.com/users/me.json";
 
         /// <summary>
         ///     The _app id.
@@ -52,10 +51,10 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         /// </summary>
         /// <param name="clientId">The Google Client Id</param>
         /// <param name="clientSecret">The Google Client Secret</param>
-        public RenrenClient(string clientId, string clientSecret)
+        public KaixinClient(string clientId, string clientSecret)
             : this(clientId, clientSecret, new[]
                                            {
-                                               "publish_share"
+                                               "basic"
                                            })
         {
         }
@@ -66,8 +65,8 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         /// <param name="clientId">The Google Client Id</param>
         /// <param name="clientSecret">The Google Client Secret</param>
         /// <param name="requestedScopes">One or more requested scopes, passed without the base URI.</param>
-        public RenrenClient(string clientId, string clientSecret, params string[] requestedScopes)
-            : base("renren")
+        public KaixinClient(string clientId, string clientSecret, params string[] requestedScopes)
+            : base("kaixin")
         {
             if (string.IsNullOrWhiteSpace(clientId))
             {
@@ -114,14 +113,17 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         protected override IDictionary<string, string> GetUserData(string accessToken)
         {
             log.Info("GetUserData");
-            var uid = (string) HttpContext.Current.Session["uid"];
-            var collection = new NameValueCollection();
-            string json = UriHelper.OAuthGetBearer(UserInfoEndpoint, collection, accessToken);
+            var collection = new NameValueCollection
+                             {
+                                 {"fields", "uid,name"},
+                                 {"access_token", accessToken}
+                             };
+            string json = UriHelper.OAuthPost(UserInfoEndpoint, collection);
             log.Info("response:" + json);
             var result = JsonConvert.DeserializeObject<GetUserDataResult>(json);
             var extraData = new Dictionary<string, string>
                             {
-                                {"id", uid},
+                                {"id", result.uid},
                                 {"name", result.name},
                             };
             return extraData;
@@ -147,7 +149,6 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             var data = JsonConvert.DeserializeObject<QueryAccessTokenResponseData>(json);
             string accessToken = data.access_token;
 
-            HttpContext.Current.Session["uid"] = data.user.id;
             return accessToken;
         }
 
@@ -158,7 +159,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             /// <summary>
             /// </summary>
             [DataMember]
-            public string id { get; set; }
+            public string uid { get; set; }
 
             /// <summary>
             /// </summary>
@@ -172,17 +173,6 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         {
             [DataMember]
             public string access_token { get; set; }
-
-            [DataMember]
-            public User user { get; set; }
-
-            [DataContract]
-            [Serializable]
-            public class User
-            {
-                [DataMember]
-                public string id { get; set; }
-            }
         }
     }
 }
