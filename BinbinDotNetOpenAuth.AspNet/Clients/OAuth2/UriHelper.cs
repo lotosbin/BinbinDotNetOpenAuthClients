@@ -79,12 +79,12 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             return json;
         }
 
-        internal static string OAuthGetWithHeader(string endpoint, NameValueCollection valueCollection, string accessToken)
+        internal static string OAuthGetWithHeader(string endpoint, NameValueCollection valueCollection, string accessToken, string prefix = "Bearer ")
         {
             Uri uri = BuildUri(endpoint, valueCollection);
 
             var webRequest = (HttpWebRequest) WebRequest.Create(uri);
-            webRequest.Headers.Add("Authorization", "Bearer " + accessToken);
+            webRequest.Headers.Add("Authorization", prefix + accessToken);
             string json;
             using (WebResponse webResponse = webRequest.GetResponse())
             {

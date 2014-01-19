@@ -114,7 +114,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         {
             log.Info("GetUserData");
             var collection = new NameValueCollection();
-            string json = UriHelper.OAuthGetWithHeader(UserInfoEndpoint, collection, accessToken);
+            string json = UriHelper.OAuthGetWithHeader(UserInfoEndpoint, collection, accessToken, "Bearer ");
             log.Info("response:" + json);
             var user = JsonConvert.DeserializeObject<DoubanUserData>(json);
             var extraData = new Dictionary<string, string>

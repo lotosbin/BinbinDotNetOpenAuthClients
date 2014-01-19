@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\HttpContextBaseExtension.cs" />
+    <Compile Include="Clients\OAuth2\Base64Extension.cs" />
     <Compile Include="Clients\OAuth2\DoubanClient.cs" />
     <Compile Include="Clients\OAuth2\DoubanScopes.cs" />
     <Compile Include="Clients\OAuth2\DoubanUserData.cs" />

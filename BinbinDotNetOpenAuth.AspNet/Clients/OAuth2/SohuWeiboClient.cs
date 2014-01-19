@@ -87,10 +87,10 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
                 throw new ArgumentNullException("requestedScopes");
             }
 
-            //if (requestedScopes.Length == 0)
-            //{
-            //    throw new ArgumentException("One or more scopes must be requested.", "requestedScopes");
-            //}
+            if (requestedScopes.Length == 0)
+            {
+                throw new ArgumentException("One or more scopes must be requested.", "requestedScopes");
+            }
 
             this._clientId = clientId;
             this._clientSecret = clientSecret;
@@ -118,11 +118,8 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         {
             log.Info("GetUserData");
             //var uid = (string) HttpContext.Current.Session["uid"];
-            var collection = new NameValueCollection
-                             {
-                                 {"access_token", accessToken},
-                             };
-            string json = UriHelper.OAuthGet(UserInfoEndpoint, collection);
+            var collection = new NameValueCollection();
+            string json = UriHelper.OAuthGetWithHeader(UserInfoEndpoint, collection, accessToken, "OAuth2 ");
             log.Info("response:" + json);
             var result = JsonConvert.DeserializeObject<GetUserDataResult>(json);
             var extraData = new Dictionary<string, string>
@@ -141,7 +138,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
                                       {"grant_type", "authorization_code"},
                                       {"code", authorizationCode},
                                       {"client_id", this._clientId},
-                                      {"client_secret", this._clientSecret},
+                                      {"client_secret", this._clientSecret.EncodeBase64()},
                                       {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
                                   };
             string json = UriHelper.OAuthPost(TokenEndpoint, valueCollection);
