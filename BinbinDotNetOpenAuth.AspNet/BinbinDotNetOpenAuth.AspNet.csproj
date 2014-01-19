@@ -92,6 +92,7 @@
     <Compile Include="Clients\OAuth2\QQClient.cs" />
     <Compile Include="Clients\OAuth2\QQUserData.cs" />
     <Compile Include="Clients\OAuth2\SohuClient.cs" />
+    <Compile Include="Clients\OAuth2\SohuWeiboClient.cs" />
     <Compile Include="Clients\OAuth2\TaobaoClient.cs" />
     <Compile Include="Clients\OAuth2\TaobaoQueryAccessTokenResponseData.cs" />
     <Compile Include="Clients\OAuth2\TaobaoResponseData.cs" />
