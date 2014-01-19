@@ -128,12 +128,12 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         /// <summary>
         ///     The authorization endpoint.
         /// </summary>
-        private const string AuthorizationEndpoint = "http://api.t.163.com/oauth2/authenticate";
+        private const string AuthorizationEndpoint = "https://api.t.163.com/oauth2/authorize";
 
         /// <summary>
         ///     The token endpoint.
         /// </summary>
-        private const string TokenEndpoint = "http://api.t.163.com/oauth2/access_token";
+        private const string TokenEndpoint = "https://api.t.163.com/oauth2/access_token";
 
         /// <summary>
         ///     The user info endpoint.
