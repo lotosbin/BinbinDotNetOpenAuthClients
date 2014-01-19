@@ -144,7 +144,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
                                       {"client_secret", this._clientSecret},
                                       {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
                                   };
-            string json = UriHelper.OAuthGet(TokenEndpoint, valueCollection);
+            string json = UriHelper.OAuthPost(TokenEndpoint, valueCollection);
             log.Info("response:" + json);
             if (json == null)
             {
