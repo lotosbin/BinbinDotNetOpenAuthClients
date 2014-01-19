@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Top.Api;
 using Top.Api.Request;
 using Top.Api.Response;
+using System.Runtime.Serialization;
 
 namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
@@ -160,5 +161,43 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             var data = JsonConvert.DeserializeObject<TaobaoQueryAccessTokenResponseData>(json);
             return data.access_token;
         }
+        [DataContract]
+        [Serializable]
+        public class TaobaoQueryAccessTokenResponseData
+        {
+            [DataMember]
+            public string access_token { get; set; }
+
+            [DataMember]
+            public string taobao_user_id { get; set; }
+
+            [DataMember]
+            public string taobao_user_nick { get; set; }
+        }
+        [DataContract]
+        [Serializable]
+        public class TaobaoResponseData
+        {
+            [DataMember]
+            public TaobaoUserSellerGetResponseData user_seller_get_response { get; set; }
+        }
+        [DataContract]
+        [Serializable]
+        public class TaobaoUserData
+        {
+            [DataMember]
+            public string user_id { get; set; }
+
+            [DataMember]
+            public string nick { get; set; }
+        }
+        [DataContract]
+        [Serializable]
+        public class TaobaoUserSellerGetResponseData
+        {
+            [DataMember]
+            public TaobaoUserData user { get; set; }
+        }
+
     }
 }

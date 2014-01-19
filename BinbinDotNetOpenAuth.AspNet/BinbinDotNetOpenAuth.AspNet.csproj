@@ -86,22 +86,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\HttpContextBaseExtension.cs" />
+    <Compile Include="Clients\OAuth2\RenrenClient.cs" />
     <Compile Include="Clients\OAuth2\DoubanClient.cs" />
     <Compile Include="Clients\OAuth2\DoubanScopes.cs" />
-    <Compile Include="Clients\OAuth2\DoubanUserData.cs" />
     <Compile Include="Clients\OAuth2\NeteaseWeiboClient.cs" />
     <Compile Include="Clients\OAuth2\QQClient.cs" />
-    <Compile Include="Clients\OAuth2\QQUserData.cs" />
     <Compile Include="Clients\OAuth2\SohuClient.cs" />
     <Compile Include="Clients\OAuth2\SohuWeiboClient.cs" />
     <Compile Include="Clients\OAuth2\TaobaoClient.cs" />
-    <Compile Include="Clients\OAuth2\TaobaoQueryAccessTokenResponseData.cs" />
-    <Compile Include="Clients\OAuth2\TaobaoResponseData.cs" />
-    <Compile Include="Clients\OAuth2\TaobaoUserData.cs" />
     <Compile Include="Clients\OAuth2\UriHelper.cs" />
-    <Compile Include="Clients\OAuth2\TaobaoUserSellerGetResponseData.cs" />
     <Compile Include="Clients\OAuth2\WeiboClient.cs" />
-    <Compile Include="Clients\OAuth2\WeiboUserData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

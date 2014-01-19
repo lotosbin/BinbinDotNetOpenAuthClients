@@ -1,34 +1,34 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Runtime.Serialization;
+using System.Web;
 using DotNetOpenAuth.AspNet.Clients;
 using log4net;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
-namespace BinbinDotNetOpenAuth.AspNet.Clients
+namespace BinbinDotNetOpenAuth.AspNet.Clients.OAuth2
 {
-    public class DoubanClient : OAuth2Client
+    public class RenrenClient : OAuth2Client
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof (DoubanClient));
+        private static readonly ILog log = LogManager.GetLogger(typeof (RenrenClient));
 
         #region Constants and Fields
 
         /// <summary>
         ///     The authorization endpoint.
         /// </summary>
-        private const string AuthorizationEndpoint = "https://www.douban.com/service/auth2/auth";
+        private const string AuthorizationEndpoint = "https://graph.renren.com/oauth/authorize";
 
         /// <summary>
         ///     The token endpoint.
         /// </summary>
-        private const string TokenEndpoint = "https://www.douban.com/service/auth2/token";
+        private const string TokenEndpoint = "https://graph.renren.com/oauth/token";
 
         /// <summary>
         ///     The user info endpoint.
         /// </summary>
-        private const string UserInfoEndpoint = "https://api.douban.com/v2/user/~me";
+        private const string UserInfoEndpoint = "https://api.renren.com/v2/user/login/get";
 
         /// <summary>
         ///     The _app id.
@@ -52,10 +52,10 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         /// </summary>
         /// <param name="clientId">The Google Client Id</param>
         /// <param name="clientSecret">The Google Client Secret</param>
-        public DoubanClient(string clientId, string clientSecret)
+        public RenrenClient(string clientId, string clientSecret)
             : this(clientId, clientSecret, new[]
                                            {
-                                               "douban_basic_common"
+                                               "publish_share"
                                            })
         {
         }
@@ -66,8 +66,8 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         /// <param name="clientId">The Google Client Id</param>
         /// <param name="clientSecret">The Google Client Secret</param>
         /// <param name="requestedScopes">One or more requested scopes, passed without the base URI.</param>
-        public DoubanClient(string clientId, string clientSecret, params string[] requestedScopes)
-            : base("douban")
+        public RenrenClient(string clientId, string clientSecret, params string[] requestedScopes)
+            : base("renren")
         {
             if (string.IsNullOrWhiteSpace(clientId))
             {
@@ -100,28 +100,29 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             IEnumerable<string> scopes = this._requestedScopes;
             string state = string.IsNullOrEmpty(returnUrl.Query) ? string.Empty : returnUrl.Query.Substring(1);
 
-            Uri uri = UriHelper.BuildUri(AuthorizationEndpoint, new NameValueCollection
-                                                                {
-                                                                    {"response_type", "code"},
-                                                                    {"client_id", this._clientId},
-                                                                    {"scope", string.Join(" ", scopes)},
-                                                                    {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
-                                                                    {"state", state},
-                                                                });
-            return uri;
+            var collection = new NameValueCollection
+                             {
+                                 {"response_type", "code"},
+                                 {"client_id", this._clientId},
+                                 {"scope", string.Join(" ", scopes)},
+                                 {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
+                                 {"state", state},
+                             };
+            return UriHelper.BuildUri(AuthorizationEndpoint, collection);
         }
 
         protected override IDictionary<string, string> GetUserData(string accessToken)
         {
             log.Info("GetUserData");
+            var uid = (string) HttpContext.Current.Session["uid"];
             var collection = new NameValueCollection();
             string json = UriHelper.OAuthGetBearer(UserInfoEndpoint, collection, accessToken);
             log.Info("response:" + json);
-            var user = JsonConvert.DeserializeObject<DoubanUserData>(json);
+            var result = JsonConvert.DeserializeObject<GetUserDataResult>(json);
             var extraData = new Dictionary<string, string>
                             {
-                                {"id", user.id},
-                                {"name", user.name},
+                                {"id", uid},
+                                {"name", result.name},
                             };
             return extraData;
         }
@@ -129,37 +130,59 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         protected override string QueryAccessToken(Uri returnUrl, string authorizationCode)
         {
             log.Info("QueryAccessToken(authcode:" + authorizationCode + ")");
-            var collection = new NameValueCollection
-                             {
-                                 {"grant_type", "authorization_code"},
-                                 {"code", authorizationCode},
-                                 {"client_id", this._clientId},
-                                 {"client_secret", this._clientSecret},
-                                 {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
-                             };
-            string response = UriHelper.OAuthPost(TokenEndpoint, collection);
-            log.Info("response:" + response);
-            if (response == null)
+            var valueCollection = new NameValueCollection
+                                  {
+                                      {"grant_type", "authorization_code"},
+                                      {"code", authorizationCode},
+                                      {"client_id", this._clientId},
+                                      {"client_secret", this._clientSecret},
+                                      {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
+                                  };
+            string json = UriHelper.OAuthGet(TokenEndpoint, valueCollection);
+            log.Info("response:" + json);
+            if (json == null)
             {
                 return null;
             }
-            JObject json = JObject.Parse(response);
-            //HttpContext.Current.Session["uid"] = json.Value<string>("douban_user_id");
-            return json.Value<string>("access_token");
+            var data = JsonConvert.DeserializeObject<QueryAccessTokenResponseData>(json);
+            string accessToken = data.access_token;
+
+            HttpContext.Current.Session["uid"] = data.user.id;
+            return accessToken;
         }
 
         [DataContract]
         [Serializable]
-        public class DoubanUserData
+        public class GetUserDataResult
         {
+            /// <summary>
+            /// </summary>
             [DataMember]
             public string id { get; set; }
 
-            [DataMember]
-            public string uid { get; set; }
-
+            /// <summary>
+            /// </summary>
             [DataMember]
             public string name { get; set; }
+        }
+
+        [DataContract]
+        [Serializable]
+        public class QueryAccessTokenResponseData
+        {
+            [DataMember]
+            public string access_token { get; set; }
+
+            [DataMember]
+            public User user { get; set; }
+
+            [DataContract]
+            [Serializable]
+            public class User
+            {
+                [DataMember]
+                public string id { get; set; }
+            }
         }
     }
 }

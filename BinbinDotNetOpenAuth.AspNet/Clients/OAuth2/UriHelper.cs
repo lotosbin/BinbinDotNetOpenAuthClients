@@ -6,7 +6,7 @@ using System.Web;
 
 namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
-    internal static class UriHelper
+    public static class UriHelper
     {
         public static Uri BuildUri(string baseUri, NameValueCollection queryParameters)
         {
@@ -19,7 +19,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             return builder.Uri;
         }
 
-        internal static string OAuthPost(string endpoint, NameValueCollection collection)
+        public static string OAuthPost(string endpoint, NameValueCollection collection)
         {
             NameValueCollection postData = HttpUtility.ParseQueryString(String.Empty);
             postData.Add(collection);
@@ -54,7 +54,42 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             return response;
         }
 
-        internal static string OAuthGet(string endpoint, NameValueCollection valueCollection)
+        public static string OAuthPostBearer(string endpoint, NameValueCollection collection, string accessToken)
+        {
+            NameValueCollection postData = HttpUtility.ParseQueryString(String.Empty);
+            postData.Add(collection);
+
+            var webRequest = (HttpWebRequest) WebRequest.Create(endpoint);
+            webRequest.Headers.Add("Authorization", "Bearer " + accessToken);
+            webRequest.Method = "POST";
+            webRequest.ContentType = "application/x-www-form-urlencoded";
+
+            using (Stream s = webRequest.GetRequestStream())
+            {
+                using (var sw = new StreamWriter(s))
+                {
+                    sw.Write(postData.ToString());
+                }
+            }
+
+            string response;
+            using (WebResponse webResponse = webRequest.GetResponse())
+            {
+                Stream responseStream = webResponse.GetResponseStream();
+                if (responseStream == null)
+                {
+                    return null;
+                }
+
+                using (var reader = new StreamReader(responseStream))
+                {
+                    response = reader.ReadToEnd();
+                }
+            }
+            return response;
+        }
+
+        public static string OAuthGet(string endpoint, NameValueCollection valueCollection)
         {
             Uri uri = BuildUri(endpoint, valueCollection);
 
@@ -79,7 +114,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             return json;
         }
 
-        internal static string OAuthGetWithHeader(string endpoint, NameValueCollection valueCollection, string accessToken)
+        public static string OAuthGetBearer(string endpoint, NameValueCollection valueCollection, string accessToken)
         {
             Uri uri = BuildUri(endpoint, valueCollection);
 

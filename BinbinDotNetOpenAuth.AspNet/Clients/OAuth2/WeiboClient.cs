@@ -5,6 +5,7 @@ using System.Web;
 using DotNetOpenAuth.AspNet.Clients;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Runtime.Serialization;
 
 namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
@@ -149,5 +150,19 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             HttpContext.Current.Session["uid"] = json.Value<string>("uid");
             return json.Value<string>("access_token");
         }
+        [DataContract]
+        [Serializable]
+        public class WeiboUserData
+        {
+            [DataMember]
+            public string id { get; set; }
+
+            [DataMember]
+            public string screen_name { get; set; }
+
+            [DataMember]
+            public string name { get; set; }
+        }
+
     }
 }

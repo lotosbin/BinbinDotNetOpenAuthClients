@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("BinbinDotNetOpenAuth.AspNet")]
-[assembly: AssemblyDescription("oauth client for taobao weibo sina qq tencent douban")]
+[assembly: AssemblyDescription("oauth client for taobao weibo sina qq tencent douban sohu netease renren")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("lotosbin")]
 [assembly: AssemblyProduct("BinbinDotNetOpenAuth.AspNet")]
@@ -35,5 +35,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("1.6.1.*")]
-[assembly: AssemblyFileVersion("1.6.1.0")]
+[assembly: AssemblyVersion("1.7.0.*")]
+[assembly: AssemblyFileVersion("1.7.0.0")]
