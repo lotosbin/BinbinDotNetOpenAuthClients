@@ -119,6 +119,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             Uri uri = BuildUri(endpoint, valueCollection);
 
             var webRequest = (HttpWebRequest) WebRequest.Create(uri);
+            string prefix="bearer ";
             webRequest.Headers.Add("Authorization", prefix + accessToken);
             string json;
             using (WebResponse webResponse = webRequest.GetResponse())
