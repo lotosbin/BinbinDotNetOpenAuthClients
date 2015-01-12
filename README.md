@@ -52,5 +52,11 @@ AccountController.cs
                     {"beta", "beta"}
                 });    
 
+参考资料
+========
+qq connect登录
+http://wiki.connect.qq.com/oauth2-0%E7%AE%80%E4%BB%8B
 
+qq open
+http://wiki.open.qq.com/wiki/website/OAuth2.0%E7%AE%80%E4%BB%8B
 
