@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph GraphDirection="LeftToRight" Layout="Sugiyama" ZoomLevel="-1" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="BinbinDotNetOpenAuth.AspNet" Category="Project" Bounds="0,719.24,203.573333333333,25.24" Label="BinbinDotNetOpenAuth.AspNet" />
+    <Node Id="BinbinDotNetOpenAuth.Samples" Category="Project" Bounds="0,220,208.9,25.24" Label="BinbinDotNetOpenAuth.Samples" />
+    <Node Id="DotNetOpenAuth.AspNet 4.1.4.12333" Category="Package" Bounds="623.94,552,235.72,25.24" Label="DotNetOpenAuth.AspNet 4.1.4.12333" />
+    <Node Id="DotNetOpenAuth.AspNet 4.3.4.13329" Category="Package" Bounds="233.573333333334,831.24,235.72,25.24" Label="DotNetOpenAuth.AspNet 4.3.4.13329" />
+    <Node Id="DotNetOpenAuth.Core 4.1.4.12333" Category="Package" Bounds="1591.735,552,220.073333333333,25.24" Label="DotNetOpenAuth.Core 4.1.4.12333" />
+    <Node Id="DotNetOpenAuth.Core 4.3.4.13329" Category="Package" Bounds="1135.7,775.24,220.073333333333,25.24" Label="DotNetOpenAuth.Core 4.3.4.13329" />
+    <Node Id="DotNetOpenAuth.OAuth.Consumer 4.1.4.12333" Category="Package" Bounds="935.635,608,292.023333333333,25.24" Label="DotNetOpenAuth.OAuth.Consumer 4.1.4.12333" />
+    <Node Id="DotNetOpenAuth.OAuth.Consumer 4.3.4.13329" Category="Package" Bounds="508.578333333334,831.24,292.023333333333,25.24" Label="DotNetOpenAuth.OAuth.Consumer 4.3.4.13329" />
+    <Node Id="DotNetOpenAuth.OAuth.Core 4.1.4.12333" Category="Package" Bounds="1270.66,608,260.44,25.24" Label="DotNetOpenAuth.OAuth.Core 4.1.4.12333" />
+    <Node Id="DotNetOpenAuth.OAuth.Core 4.3.4.13329" Category="Package" Bounds="842.573333333334,831.24,260.44,25.24" Label="DotNetOpenAuth.OAuth.Core 4.3.4.13329" />
+    <Node Id="DotNetOpenAuth.OpenId.Core 4.1.4.12333" Category="Package" Bounds="1267.97333333333,552,265.813333333334,25.24" Label="DotNetOpenAuth.OpenId.Core 4.1.4.12333" />
+    <Node Id="DotNetOpenAuth.OpenId.Core 4.3.4.13329" Category="Package" Bounds="839.886666666667,775.24,265.813333333334,25.24" Label="DotNetOpenAuth.OpenId.Core 4.3.4.13329" />
+    <Node Id="DotNetOpenAuth.OpenId.RelyingParty 4.1.4.12333" Category="Package" Bounds="926.35,552,310.593333333333,25.24" Label="DotNetOpenAuth.OpenId.RelyingParty 4.1.4.12333" />
+    <Node Id="DotNetOpenAuth.OpenId.RelyingParty 4.3.4.13329" Category="Package" Bounds="499.293333333334,775.24,310.593333333333,25.24" Label="DotNetOpenAuth.OpenId.RelyingParty 4.3.4.13329" />
+    <Node Id="LyphTEC.MongoSimpleMembership 1.0.2" Category="Package" Bounds="270.02,408,256.11,25.24" Label="LyphTEC.MongoSimpleMembership 1.0.2" />
+    <Node Id="Microsoft.AspNet.Mvc 4.0.30506.0" Category="Package" Bounds="633.805,496,215.99,25.24" Label="Microsoft.AspNet.Mvc 4.0.30506.0" />
+    <Node Id="Microsoft.AspNet.Mvc.FixedDisplayModes 1.0.0" Category="Package" Bounds="252.043333333333,464,292.063333333333,25.24" Label="Microsoft.AspNet.Mvc.FixedDisplayModes 1.0.0" />
+    <Node Id="Microsoft.AspNet.Razor 2.0.30506.0" Category="Package" Bounds="1288.615,496,224.53,25.24" Label="Microsoft.AspNet.Razor 2.0.30506.0" />
+    <Node Id="Microsoft.AspNet.Web.Optimization 1.0.0" Category="Package" Bounds="952.54,332,258.213333333333,25.24" Label="Microsoft.AspNet.Web.Optimization 1.0.0" />
+    <Node Id="Microsoft.AspNet.WebApi 4.0.30506.0" Category="Package" Bounds="622.833333333333,264,237.933333333333,25.24" Label="Microsoft.AspNet.WebApi 4.0.30506.0" />
+    <Node Id="Microsoft.AspNet.WebApi.Client 4.0.30506.0" Category="Package" Bounds="1564.81666666667,300,273.91,25.24" Label="Microsoft.AspNet.WebApi.Client 4.0.30506.0" />
+    <Node Id="Microsoft.AspNet.WebApi.Core 4.0.30506.0" Category="Package" Bounds="1266.94333333333,276,267.873333333333,25.24" Label="Microsoft.AspNet.WebApi.Core 4.0.30506.0" />
+    <Node Id="Microsoft.AspNet.WebApi.OData 4.0.30506" Category="Package" Bounds="947.87,220,267.553333333333,25.24" Label="Microsoft.AspNet.WebApi.OData 4.0.30506" />
+    <Node Id="Microsoft.AspNet.WebApi.WebHost 4.0.30506.0" Category="Package" Bounds="934.426666666667,276,294.44,25.24" Label="Microsoft.AspNet.WebApi.WebHost 4.0.30506.0" />
+    <Node Id="Microsoft.AspNet.WebPages 2.0.30506.0" Category="Package" Bounds="955.321666666666,452,252.65,25.24" Label="Microsoft.AspNet.WebPages 2.0.30506.0" />
+    <Node Id="Microsoft.AspNet.WebPages.Data 2.0.20710.0" Category="Package" Bounds="940.438333333333,396,282.416666666667,25.24" Label="Microsoft.AspNet.WebPages.Data 2.0.20710.0" />
+    <Node Id="Microsoft.AspNet.WebPages.OAuth 2.0.30506.0" Category="Package" Bounds="251.566666666667,520,293.016666666667,25.24" Label="Microsoft.AspNet.WebPages.OAuth 2.0.30506.0" />
+    <Node Id="Microsoft.AspNet.WebPages.WebData 2.0.30506.0" Category="Package" Bounds="587.25,408,309.1,25.24" Label="Microsoft.AspNet.WebPages.WebData 2.0.30506.0" />
+    <Node Id="Microsoft.Bcl 1.1.6" Category="Package" Bounds="1580.91,819.24,125.03,25.24" Label="Microsoft.Bcl 1.1.6" />
+    <Node Id="Microsoft.Bcl.Build 1.0.13" Category="Package" Bounds="1735.94,775.24,163.943333333333,25.24" Label="Microsoft.Bcl.Build 1.0.13" />
+    <Node Id="Microsoft.Data.Edm 5.2.0" Category="Package" Bounds="1619.985,188,163.573333333333,25.24" Label="Microsoft.Data.Edm 5.2.0" />
+    <Node Id="Microsoft.Data.OData 5.2.0" Category="Package" Bounds="1313.52333333333,188,174.713333333333,25.24" Label="Microsoft.Data.OData 5.2.0" />
+    <Node Id="Microsoft.Net.Http 2.0.20710.0" Category="Package" Bounds="1868.72666666667,144,196.173333333333,25.24" Label="Microsoft.Net.Http 2.0.20710.0" />
+    <Node Id="Microsoft.Net.Http 2.2.18" Category="Package" Bounds="1385.77333333333,775.24,165.136666666667,25.24" Label="Microsoft.Net.Http 2.2.18" />
+    <Node Id="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package" Bounds="1288.2,332,225.36,25.24" Label="Microsoft.Web.Infrastructure 1.0.0.0" />
+    <Node Id="Microsoft.jQuery.Unobtrusive.Ajax 2.0.30506.0" Category="Package" Bounds="599.508333333334,120,284.583333333333,25.24" Label="Microsoft.jQuery.Unobtrusive.Ajax 2.0.30506.0" />
+    <Node Id="Microsoft.jQuery.Unobtrusive.Validation 2.0.30506.0" Category="Package" Bounds="238.9,0,318.35,25.24" Label="Microsoft.jQuery.Unobtrusive.Validation 2.0.30506.0" />
+    <Node Id="Modernizr 2.6.2" Category="Package" Bounds="343.108333333333,56,109.933333333333,25.24" Label="Modernizr 2.6.2" />
+    <Node Id="MongoRepository 1.6.2" Category="Package" Bounds="320.97,352,154.21,25.24" Label="MongoRepository 1.6.2" />
+    <Node Id="Newtonsoft.Json 4.5.11" Category="Package" Bounds="1890.29166666667,87.9999999999999,153.043333333334,25.24" Label="Newtonsoft.Json 4.5.11" />
+    <Node Id="Newtonsoft.Json 5.0.8" Category="Package" Bounds="278.43,719.24,146.006666666667,25.24" Label="Newtonsoft.Json 5.0.8" />
+    <Node Id="System.Spatial 5.2.0" Category="Package" Bounds="1635.07333333333,244,133.396666666667,25.24" Label="System.Spatial 5.2.0" />
+    <Node Id="TopSdk 1.0.20101.1" Category="Package" Bounds="285.521666666667,663.24,131.823333333333,25.24" Label="TopSdk 1.0.20101.1" />
+    <Node Id="WebGrease 1.3.0" Category="Package" Bounds="1342.66166666667,388,116.436666666667,25.24" Label="WebGrease 1.3.0" />
+    <Node Id="jQuery 1.8.2" Category="Package" Bounds="1037.365,120,88.5633333333335,25.24" Label="jQuery 1.8.2" />
+    <Node Id="jQuery.UI.Combined 1.8.24" Category="Package" Bounds="655.048333333334,176,173.503333333333,25.24" Label="jQuery.UI.Combined 1.8.24" />
+    <Node Id="jQuery.Validation 1.10.0" Category="Package" Bounds="663.488333333334,64,156.623333333333,25.24" Label="jQuery.Validation 1.10.0" />
+    <Node Id="knockoutjs 2.2.0" Category="Package" Bounds="341.675,112,112.8,25.24" Label="knockoutjs 2.2.0" />
+    <Node Id="log4net 2.0.3" Category="Package" Bounds="304.108333333334,775.24,94.65,25.24" Label="log4net 2.0.3" />
+    <Node Id="mongocsharpdriver 1.8.3" Category="Package" Bounds="660.3,352,163,25.24" Label="mongocsharpdriver 1.8.3" />
+  </Nodes>
+  <Links>
+    <Link Source="BinbinDotNetOpenAuth.AspNet" Target="DotNetOpenAuth.AspNet 4.3.4.13329" Category="Installed Package" Bounds="129.91650390625,744.47998046875,185.175506591797,83.0760498046875" />
+    <Link Source="BinbinDotNetOpenAuth.AspNet" Target="Newtonsoft.Json 5.0.8" Category="Installed Package" Bounds="203.573333740234,731.859985351563,65.8566589355469,0" />
+    <Link Source="BinbinDotNetOpenAuth.AspNet" Target="TopSdk 1.0.20101.1" Category="Installed Package" Bounds="158.046325683594,690.449890136719,128.345581054688,28.7901000976563" />
+    <Link Source="BinbinDotNetOpenAuth.AspNet" Target="log4net 2.0.3" Category="Installed Package" Bounds="158.046325683594,744.47998046875,137.438110351563,30.8297119140625" />
+    <Link Source="BinbinDotNetOpenAuth.Samples" Target="LyphTEC.MongoSimpleMembership 1.0.2" Category="Installed Package" Bounds="122.263793945313,245.240005493164,240.247711181641,158.993698120117" />
+    <Link Source="BinbinDotNetOpenAuth.Samples" Target="Microsoft.AspNet.Mvc.FixedDisplayModes 1.0.0" Category="Installed Package" Bounds="113.895332336426,245.240005493164,223.993766784668,216.615768432617" />
+    <Link Source="BinbinDotNetOpenAuth.Samples" Target="Microsoft.AspNet.Web.Optimization 1.0.0" Category="Installed Package" Bounds="146.558486938477,245.240005493164,796.987045288086,94.5312957763672" />
+    <Link Source="BinbinDotNetOpenAuth.Samples" Target="Microsoft.AspNet.WebApi 4.0.30506.0" Category="Installed Package" Bounds="208.368209838867,243.945266723633,405.470596313477,28.2074127197266" />
+    <Link Source="BinbinDotNetOpenAuth.Samples" Target="Microsoft.AspNet.WebApi.OData 4.0.30506" Category="Installed Package" Bounds="208.899993896484,232.619995117188,729.970001220703,0" />
+    <Link Source="BinbinDotNetOpenAuth.Samples" Target="Microsoft.AspNet.WebPages.OAuth 2.0.30506.0" Category="Installed Package" Bounds="111.102874755859,245.240005493164,222.750457763672,272.762619018555" />
+    <Link Source="BinbinDotNetOpenAuth.Samples" Target="Microsoft.jQuery.Unobtrusive.Ajax 2.0.30506.0" Category="Installed Package" Bounds="151.943222045898,146.177490234375,460.411026000977,73.822509765625" />
+    <Link Source="BinbinDotNetOpenAuth.Samples" Target="Microsoft.jQuery.Unobtrusive.Validation 2.0.30506.0" Category="Installed Package" Bounds="121.293395996094,30.6365642547607,252.735626220703,189.363435745239" />
+    <Link Source="BinbinDotNetOpenAuth.Samples" Target="Modernizr 2.6.2" Category="Installed Package" Bounds="127.044799804688,85.6286697387695,240.577941894531,134.37133026123" />
+    <Link Source="BinbinDotNetOpenAuth.Samples" Target="MongoRepository 1.6.2" Category="Installed Package" Bounds="118.437232971191,245.240005493164,193.595909118652,109.154281616211" />
+    <Link Source="BinbinDotNetOpenAuth.Samples" Target="jQuery.UI.Combined 1.8.24" Category="Installed Package" Bounds="208.368209838867,191.962661743164,437.685623168945,29.3320617675781" />
+    <Link Source="BinbinDotNetOpenAuth.Samples" Target="knockoutjs 2.2.0" Category="Installed Package" Bounds="125.480888366699,136.632263183594,207.441261291504,83.3677368164063" />
+    <Link Source="DotNetOpenAuth.AspNet 4.1.4.12333" Target="DotNetOpenAuth.OAuth.Consumer 4.1.4.12333" Category="Package Dependency" Bounds="818.386901855469,577.239990234375,177.792663574219,29.2966918945313" />
+    <Link Source="DotNetOpenAuth.AspNet 4.1.4.12333" Target="DotNetOpenAuth.OpenId.RelyingParty 4.1.4.12333" Category="Package Dependency" Bounds="859.659973144531,564.619995117188,57.6900024414063,0" />
+    <Link Source="DotNetOpenAuth.AspNet 4.3.4.13329" Target="DotNetOpenAuth.OAuth.Consumer 4.3.4.13329" Category="Package Dependency" Bounds="469.293334350586,843.859985351563,30.2850105794271,0" />
+    <Link Source="DotNetOpenAuth.AspNet 4.3.4.13329" Target="DotNetOpenAuth.OpenId.RelyingParty 4.3.4.13329" Category="Package Dependency" Bounds="419.751853534154,802.114833463651,157.669354039507,29.1251518879113" />
+    <Link Source="DotNetOpenAuth.Core 4.1.4.12333" Target="Microsoft.Net.Http 2.0.20710.0" Category="Package Dependency" Bounds="1709.9697265625,176.787322998047,243.74267578125,375.212677001953" />
+    <Link Source="DotNetOpenAuth.Core 4.3.4.13329" Target="Microsoft.Net.Http 2.2.18" Category="Package Dependency" Bounds="1355.77331542969,787.859985351563,21,0" />
+    <Link Source="DotNetOpenAuth.OAuth.Consumer 4.1.4.12333" Target="DotNetOpenAuth.OAuth.Core 4.1.4.12333" Category="Package Dependency" Bounds="1227.65832519531,620.619995117188,34.001708984375,0" />
+    <Link Source="DotNetOpenAuth.OAuth.Consumer 4.3.4.13329" Target="DotNetOpenAuth.OAuth.Core 4.3.4.13329" Category="Package Dependency" Bounds="800.601684570313,843.859985351563,32.9716186523438,0" />
+    <Link Source="DotNetOpenAuth.OAuth.Core 4.1.4.12333" Target="DotNetOpenAuth.Core 4.1.4.12333" Category="Package Dependency" Bounds="1468.68811035156,578.88671875,156.427368164063,29.11328125" />
+    <Link Source="DotNetOpenAuth.OAuth.Core 4.3.4.13329" Target="DotNetOpenAuth.Core 4.3.4.13329" Category="Package Dependency" Bounds="1034.30310058594,802.288879394531,141.107543945313,28.9511108398438" />
+    <Link Source="DotNetOpenAuth.OpenId.Core 4.1.4.12333" Target="DotNetOpenAuth.Core 4.1.4.12333" Category="Package Dependency" Bounds="1533.78662109375,564.619995117188,48.9483642578125,0" />
+    <Link Source="DotNetOpenAuth.OpenId.Core 4.3.4.13329" Target="DotNetOpenAuth.Core 4.3.4.13329" Category="Package Dependency" Bounds="1105.69995117188,787.859985351563,21,0" />
+    <Link Source="DotNetOpenAuth.OpenId.RelyingParty 4.1.4.12333" Target="DotNetOpenAuth.OpenId.Core 4.1.4.12333" Category="Package Dependency" Bounds="1236.943359375,564.619995117188,22.030029296875,0" />
+    <Link Source="DotNetOpenAuth.OpenId.RelyingParty 4.3.4.13329" Target="DotNetOpenAuth.OpenId.Core 4.3.4.13329" Category="Package Dependency" Bounds="809.886657714844,787.859985351563,21,0" />
+    <Link Source="LyphTEC.MongoSimpleMembership 1.0.2" Target="Microsoft.AspNet.WebPages 2.0.30506.0" Category="Package Dependency" Bounds="496.661590576172,433.239990234375,449.660064697266,31.3800048828125" />
+    <Link Source="LyphTEC.MongoSimpleMembership 1.0.2" Target="Microsoft.AspNet.WebPages.WebData 2.0.30506.0" Category="Package Dependency" Bounds="526.130004882813,420.619995117188,52.1199951171875,0" />
+    <Link Source="LyphTEC.MongoSimpleMembership 1.0.2" Target="mongocsharpdriver 1.8.3" Category="Package Dependency" Bounds="475.535888671875,378.687194824219,179.920349121094,29.3128051757813" />
+    <Link Source="Microsoft.AspNet.Mvc 4.0.30506.0" Target="Microsoft.AspNet.Razor 2.0.30506.0" Category="Package Dependency" Bounds="849.794982910156,508.619995117188,429.820007324219,0" />
+    <Link Source="Microsoft.AspNet.Mvc 4.0.30506.0" Target="Microsoft.AspNet.WebPages 2.0.30506.0" Category="Package Dependency" Bounds="839.274230957031,478.395599365234,135.972717285156,17.6044006347656" />
+    <Link Source="Microsoft.AspNet.Mvc.FixedDisplayModes 1.0.0" Target="Microsoft.AspNet.Mvc 4.0.30506.0" Category="Package Dependency" Bounds="533.631530761719,489.239990234375,91.2433471679688,8.49456787109375" />
+    <Link Source="Microsoft.AspNet.Web.Optimization 1.0.0" Target="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package Dependency" Bounds="1210.75329589844,344.619995117188,68.4466552734375,0" />
+    <Link Source="Microsoft.AspNet.Web.Optimization 1.0.0" Target="WebGrease 1.3.0" Category="Package Dependency" Bounds="1153.58813476563,357.239990234375,180.265991210938,31.622314453125" />
+    <Link Source="Microsoft.AspNet.WebApi 4.0.30506.0" Target="Microsoft.AspNet.WebApi.WebHost 4.0.30506.0" Category="Package Dependency" Bounds="860.766662597656,280.820709228516,64.6655883789063,2.28335571289063" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 4.0.30506.0" Target="Microsoft.Net.Http 2.0.20710.0" Category="Package Dependency" Bounds="1723.212890625,173.805206298828,214.403076171875,126.194793701172" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 4.0.30506.0" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" Bounds="1727.59826660156,116.003784179688,191.539794921875,183.996215820313" />
+    <Link Source="Microsoft.AspNet.WebApi.Core 4.0.30506.0" Target="Microsoft.AspNet.WebApi.Client 4.0.30506.0" Category="Package Dependency" Bounds="1534.62756347656,299.288116455078,21.5048828125,1.71527099609375" />
+    <Link Source="Microsoft.AspNet.WebApi.OData 4.0.30506" Target="Microsoft.AspNet.WebApi.Client 4.0.30506.0" Category="Package Dependency" Bounds="1215.42333984375,237.648666381836,421.727783203125,60.3674163818359" />
+    <Link Source="Microsoft.AspNet.WebApi.OData 4.0.30506" Target="Microsoft.AspNet.WebApi.Core 4.0.30506.0" Category="Package Dependency" Bounds="1153.58813476563,245.240005493164,166.485717773438,29.2049713134766" />
+    <Link Source="Microsoft.AspNet.WebApi.OData 4.0.30506" Target="Microsoft.Data.OData 5.2.0" Category="Package Dependency" Bounds="1207.54431152344,210.274307250977,97.02392578125,9.72569274902344" />
+    <Link Source="Microsoft.AspNet.WebApi.OData 4.0.30506" Target="Microsoft.Net.Http 2.0.20710.0" Category="Package Dependency" Bounds="1134.65625,156.619995117188,725.070434570313,63.3800048828125" />
+    <Link Source="Microsoft.AspNet.WebApi.WebHost 4.0.30506.0" Target="Microsoft.AspNet.WebApi.Core 4.0.30506.0" Category="Package Dependency" Bounds="1228.86669921875,288.619995117188,29.07666015625,0" />
+    <Link Source="Microsoft.AspNet.WebApi.WebHost 4.0.30506.0" Target="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package Dependency" Bounds="1153.58813476563,301.239990234375,166.485717773438,29.2049865722656" />
+    <Link Source="Microsoft.AspNet.WebPages 2.0.30506.0" Target="Microsoft.AspNet.Razor 2.0.30506.0" Category="Package Dependency" Bounds="1173.20861816406,477.239990234375,127.193725585938,17.5311584472656" />
+    <Link Source="Microsoft.AspNet.WebPages 2.0.30506.0" Target="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package Dependency" Bounds="1137.39685058594,361.269165039063,230.228515625,90.7308349609375" />
+    <Link Source="Microsoft.AspNet.WebPages.OAuth 2.0.30506.0" Target="DotNetOpenAuth.AspNet 4.1.4.12333" Category="Package Dependency" Bounds="533.631530761719,545.239990234375,81.6550903320313,7.6019287109375" />
+    <Link Source="Microsoft.AspNet.WebPages.OAuth 2.0.30506.0" Target="Microsoft.AspNet.WebPages.WebData 2.0.30506.0" Category="Package Dependency" Bounds="447.816253662109,434.909942626953,218.306610107422,85.0900573730469" />
+    <Link Source="Microsoft.AspNet.WebPages.WebData 2.0.30506.0" Target="Microsoft.AspNet.WebPages.Data 2.0.20710.0" Category="Package Dependency" Bounds="896.349975585938,413.923675537109,35.0939331054688,1.23916625976563" />
+    <Link Source="Microsoft.Bcl 1.1.6" Target="Microsoft.Bcl.Build 1.0.13" Category="Package Dependency" Bounds="1693.47094726563,802.680603027344,65.66796875,16.5593872070313" />
+    <Link Source="Microsoft.Data.OData 5.2.0" Target="Microsoft.Data.Edm 5.2.0" Category="Package Dependency" Bounds="1488.23669433594,200.619995117188,122.748291015625,0" />
+    <Link Source="Microsoft.Data.OData 5.2.0" Target="System.Spatial 5.2.0" Category="Package Dependency" Bounds="1468.68811035156,213.240005493164,158.931274414063,29.5792541503906" />
+    <Link Source="Microsoft.Net.Http 2.2.18" Target="Microsoft.Bcl 1.1.6" Category="Package Dependency" Bounds="1518.55871582031,800.47998046875,65.920654296875,16.5664672851563" />
+    <Link Source="Microsoft.Net.Http 2.2.18" Target="Microsoft.Bcl.Build 1.0.13" Category="Package Dependency" Bounds="1550.91003417969,787.859985351563,176.029907226563,0" />
+    <Link Source="Microsoft.jQuery.Unobtrusive.Ajax 2.0.30506.0" Target="jQuery 1.8.2" Category="Package Dependency" Bounds="884.091674804688,132.619995117188,144.273315429688,0" />
+    <Link Source="Microsoft.jQuery.Unobtrusive.Validation 2.0.30506.0" Target="jQuery.Validation 1.10.0" Category="Package Dependency" Bounds="465.853271484375,25.2399997711182,199.320495605469,37.1125545501709" />
+    <Link Source="MongoRepository 1.6.2" Target="mongocsharpdriver 1.8.3" Category="Package Dependency" Bounds="475.179992675781,364.619995117188,176.119995117188,0" />
+    <Link Source="jQuery.UI.Combined 1.8.24" Target="jQuery 1.8.2" Category="Package Dependency" Bounds="818.386901855469,141.380035400391,210.097839355469,34.6199645996094" />
+    <Link Source="jQuery.Validation 1.10.0" Target="jQuery 1.8.2" Category="Package Dependency" Bounds="817.840881347656,89.150032043457,210.643859863281,34.7099380493164" />
+  </Links>
+  <Categories>
+    <Category Id="Installed Package" />
+    <Category Id="Package" />
+    <Category Id="Package Dependency" />
+    <Category Id="Project" />
+  </Categories>
+  <Properties>
+    <Property Id="Bounds" DataType="System.Windows.Rect" />
+    <Property Id="Expression" DataType="System.String" />
+    <Property Id="GraphDirection" DataType="Microsoft.VisualStudio.Diagrams.Layout.LayoutOrientation" />
+    <Property Id="GroupLabel" DataType="System.String" />
+    <Property Id="IsEnabled" DataType="System.Boolean" />
+    <Property Id="Label" Label="Label" Description="Displayable label of an Annotatable object" DataType="System.String" />
+    <Property Id="Layout" DataType="System.String" />
+    <Property Id="TargetType" DataType="System.Type" />
+    <Property Id="Value" DataType="System.String" />
+    <Property Id="ValueLabel" DataType="System.String" />
+    <Property Id="ZoomLevel" DataType="System.String" />
+  </Properties>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="Project" ValueLabel="True">
+      <Condition Expression="HasCategory('Project')" />
+      <Setter Property="Background" Value="Blue" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Package Dependency" ValueLabel="True">
+      <Condition Expression="HasCategory('Package Dependency')" />
+      <Setter Property="Background" Value="Yellow" />
+    </Style>
+  </Styles>
+</DirectedGraph>
