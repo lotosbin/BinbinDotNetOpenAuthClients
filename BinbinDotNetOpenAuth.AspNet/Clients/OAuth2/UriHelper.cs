@@ -8,13 +8,14 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
     public static class UriHelper
     {
-        public static Uri BuildUri(string baseUri, NameValueCollection queryParameters)
+        public static Uri BuildUri(string baseUri, NameValueCollection queryParameters,string frangment="")
         {
             NameValueCollection q = HttpUtility.ParseQueryString(String.Empty);
             q.Add(queryParameters);
             var builder = new UriBuilder(baseUri)
                           {
-                              Query = q.ToString()
+                              Query = q.ToString(),
+                              Fragment = frangment,
                           };
             return builder.Uri;
         }

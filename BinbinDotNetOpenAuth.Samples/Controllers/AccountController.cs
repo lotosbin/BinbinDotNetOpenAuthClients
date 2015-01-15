@@ -146,7 +146,7 @@ namespace BinbinDotNetOpenAuth.Samples.Controllers
             ViewBag.HasLocalPassword = hasLocalAccount;
             ViewBag.ReturnUrl = Url.Action("Manage");
             if (hasLocalAccount)
-            {
+            { 
                 if (ModelState.IsValid)
                 {
                     // ChangePassword will throw an exception rather than return false in certain failure scenarios.

@@ -1,4 +1,6 @@
-﻿using BinbinDotNetOpenAuth.AspNet;
+﻿using System.Collections.Generic;
+using BinbinDotNetOpenAuth.AspNet;
+using BinbinDotNetOpenAuth.AspNet.Clients;
 using Microsoft.Web.WebPages.OAuth;
 
 namespace BinbinDotNetOpenAuth.Samples
@@ -20,6 +22,8 @@ namespace BinbinDotNetOpenAuth.Samples
 
             //OAuthWebSecurity.RegisterFacebookClient("", "");
             OAuthWebSecurity.RegisterClient(new WeiboClient("3382544284", "8c91432f093bd16ccba0ca20d529e510"));
+
+            OAuthWebSecurity.RegisterClient(new WeixinClient("wx661a840ecedb554d", "163e891e7b7e144ff4b40bb0eed6b810"),"微信",new Dictionary<string, object>() {});
             OAuthWebSecurity.RegisterGoogleClient();
         }
     }
