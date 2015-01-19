@@ -3,20 +3,22 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Web;
+using log4net;
 
 namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
     public static class UriHelper
     {
-        public static Uri BuildUri(string baseUri, NameValueCollection queryParameters,string frangment="")
+        private static ILog log = LogManager.GetLogger(typeof(UriHelper));
+        public static Uri BuildUri(string baseUri, NameValueCollection queryParameters, string frangment = "")
         {
             NameValueCollection q = HttpUtility.ParseQueryString(String.Empty);
             q.Add(queryParameters);
             var builder = new UriBuilder(baseUri)
-                          {
-                              Query = q.ToString(),
-                              Fragment = frangment,
-                          };
+            {
+                Query = q.ToString(),
+                Fragment = frangment,
+            };
             return builder.Uri;
         }
 
@@ -25,7 +27,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             NameValueCollection postData = HttpUtility.ParseQueryString(String.Empty);
             postData.Add(collection);
 
-            var webRequest = (HttpWebRequest) WebRequest.Create(endpoint);
+            var webRequest = (HttpWebRequest)WebRequest.Create(endpoint);
 
             webRequest.Method = "POST";
             webRequest.ContentType = "application/x-www-form-urlencoded";
@@ -60,7 +62,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             NameValueCollection postData = HttpUtility.ParseQueryString(String.Empty);
             postData.Add(collection);
 
-            var webRequest = (HttpWebRequest) WebRequest.Create(endpoint);
+            var webRequest = (HttpWebRequest)WebRequest.Create(endpoint);
             webRequest.Headers.Add("Authorization", "Bearer " + accessToken);
             webRequest.Method = "POST";
             webRequest.ContentType = "application/x-www-form-urlencoded";
@@ -93,8 +95,8 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         public static string OAuthGet(string endpoint, NameValueCollection valueCollection)
         {
             Uri uri = BuildUri(endpoint, valueCollection);
-
-            var webRequest = (HttpWebRequest) WebRequest.Create(uri);
+            log.Debug("OAuthGet:" + uri);
+            var webRequest = (HttpWebRequest)WebRequest.Create(uri);
 
             string json;
             using (WebResponse webResponse = webRequest.GetResponse())
@@ -119,8 +121,8 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         {
             Uri uri = BuildUri(endpoint, valueCollection);
 
-            var webRequest = (HttpWebRequest) WebRequest.Create(uri);
-            string prefix="bearer ";
+            var webRequest = (HttpWebRequest)WebRequest.Create(uri);
+            string prefix = "bearer ";
             webRequest.Headers.Add("Authorization", prefix + accessToken);
             string json;
             using (WebResponse webResponse = webRequest.GetResponse())

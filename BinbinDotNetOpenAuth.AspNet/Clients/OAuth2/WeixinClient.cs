@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Web;
-using DotNetOpenAuth.AspNet.Clients;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Runtime.Serialization;
+using System.Web;
+using DotNetOpenAuth.AspNet;
+using DotNetOpenAuth.AspNet.Clients;
+using log4net;
+using Newtonsoft.Json.Linq;
 
 namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
     /// <summary>
-    ///     A DotNetOpenAuth client for logging in to Google using OAuth2.
-    ///     Reference: https://developers.google.com/accounts/docs/OAuth2
+    ///     <see cref="http://mp.weixin.qq.com/wiki/17/c0f37d5704f0b64713d5d2c37b468d75.html" />
     /// </summary>
     public class WeixinClient : OAuth2Client
     {
-        #region Constants and Fields
-
+        private static ILog log = LogManager.GetLogger(typeof(WeiboClient));
         /// <summary>
         ///     The authorization endpoint.
         /// </summary>
@@ -47,18 +46,13 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         /// </summary>
         private readonly string[] _requestedScopes;
 
-        #endregion
-
         /// <summary>
         ///     Creates a new Google OAuth2 Client, requesting the default "userinfo.profile" and "userinfo.email" scopes.
         /// </summary>
         /// <param name="clientId">The Google Client Id</param>
         /// <param name="clientSecret">The Google Client Secret</param>
         public WeixinClient(string clientId, string clientSecret)
-            : this(clientId, clientSecret, new[]
-                                           {
-                                               "snsapi_base"
-                                           })
+            : this(clientId, clientSecret, "snsapi_base")
         {
         }
 
@@ -91,31 +85,33 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
                 throw new ArgumentException("One or more scopes must be requested.", "requestedScopes");
             }
 
-            this._clientId = clientId;
-            this._clientSecret = clientSecret;
-            this._requestedScopes = requestedScopes;
+            _clientId = clientId;
+            _clientSecret = clientSecret;
+            _requestedScopes = requestedScopes;
         }
 
         protected override Uri GetServiceLoginUrl(Uri returnUrl)
         {
-            IEnumerable<string> scopes = this._requestedScopes;
-            string state = string.IsNullOrEmpty(returnUrl.Query) ? string.Empty : returnUrl.Query.Substring(1);
+            IEnumerable<string> scopes = _requestedScopes;
+            var state = string.IsNullOrEmpty(returnUrl.Query) ? string.Empty : returnUrl.Query.Substring(1);
 
             var collection = new NameValueCollection
                              {
-                                 {"appid", this._clientId},                             
-                                 //{"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
-                                 {"redirect_uri", "http://alpha.guangchi.net/account/ExternalLoginCallback" },
-                                 { "response_type", "code"},
-                                 {"scope", string.Join(" ", scopes)},                            
-                                 {"state", state},
+                                 {"appid", _clientId},
+                //{"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
+                {"redirect_uri", "http://alpha.guangchi.net/account/ExternalLoginCallback"},
+                                 {"response_type", "code"},
+                                 {"scope", string.Join(" ", scopes)},
+                                 {"state", state}
                              };
-            return UriHelper.BuildUri(AuthorizationEndpoint, collection, "wechat_redirect");
+            var uri = UriHelper.BuildUri(AuthorizationEndpoint, collection, "wechat_redirect");
+            log.Debug("GetServiceLoginUrl:" + uri);
+            return uri;
         }
 
         protected override IDictionary<string, string> GetUserData(string accessToken)
         {
-            var openid = (string) HttpContext.Current.Session["openid"];
+            var openid = (string)HttpContext.Current.Session["openid"];
             var collection = new NameValueCollection
                              {
                                  {"access_token", accessToken},
@@ -126,46 +122,57 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             var extraData = new Dictionary<string, string>
                             {
                                 {"id", openid},
-                                {"name",openid}
-                                //{"nickname", user.nickname},
-                                //{"sex", user.sex.ToString()},
-                                //{"city", user.city},
-                                //{"country", user.country},
-                                //{"headimgurl", user.headimgurl},
-                                //{"privilege", user.privilege.ToString()},
-                                //{"unionid", user.unionid},
-                            };
+                                {"name", openid}
+                //{"nickname", user.nickname},
+                //{"sex", user.sex.ToString()},
+                //{"city", user.city},
+                //{"country", user.country},
+                //{"headimgurl", user.headimgurl},
+                //{"privilege", user.privilege.ToString()},
+                //{"unionid", user.unionid},
+            };
             return extraData;
         }
 
-        protected override string QueryAccessToken(Uri redirectUrl,string authorizationCode)
+        protected override string QueryAccessToken(Uri redirectUrl, string authorizationCode)
         {
+            log.Debug("QueryAccessToken:start");
             var collection = new NameValueCollection
                              {
-                                 {"appid", this._clientId},
-                                 {"secret", this._clientSecret},
+                                 {"appid", _clientId},
+                                 {"secret", _clientSecret},
                                  {"code", authorizationCode},
                                  {"grant_type", "authorization_code"}
-
                              };
-            string response = UriHelper.OAuthPost(TokenEndpoint, collection);
+            var response = UriHelper.OAuthGet(TokenEndpoint, collection);
+            log.Debug("QueryAccessToken:" + response);
             if (response == null)
             {
                 return null;
             }
-            JObject json = JObject.Parse(response);
+            var json = JObject.Parse(response);
+            if (!string.IsNullOrEmpty((string)json["errcode"]))
+            {
+                throw new Exception(response);
+            }
             HttpContext.Current.Session["openid"] = json["openid"].Value<string>();
             return json["access_token"].Value<string>();
         }
 
+        public override AuthenticationResult VerifyAuthentication(HttpContextBase context, Uri returnPageUrl)
+        {
+            log.Debug("VerifyAuthentication start");
+            return base.VerifyAuthentication(context, returnPageUrl);
+        }
+
         public Uri GetServiceLoginUrlTest(Uri returnUrl)
         {
-            return this.GetServiceLoginUrl(returnUrl);
+            return GetServiceLoginUrl(returnUrl);
         }
 
         public string QueryAccessTokenTest(Uri returnUrl, string authorizationCode)
         {
-            return this.QueryAccessToken(returnUrl, authorizationCode);
+            return QueryAccessToken(returnUrl, authorizationCode);
         }
 
         [DataContract]
@@ -174,7 +181,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         {
             [DataMember]
             public string openid { get; set; }
-            
+
             [DataMember]
             public string nickname { get; set; }
 
@@ -192,10 +199,9 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 
             [DataMember]
             public List<string> privilege { get; set; }
+
             [DataMember]
             public string unionid { get; set; }
-
         }
-
     }
 }
