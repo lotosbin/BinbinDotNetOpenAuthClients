@@ -15,7 +15,6 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
     /// </summary>
     public class WeixinClient : OAuth2Client
     {
-        private static ILog log = LogManager.GetLogger(typeof(WeiboClient));
         /// <summary>
         ///     The authorization endpoint.
         /// </summary>
@@ -30,6 +29,8 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         ///     The user info endpoint.
         /// </summary>
         private const string UserInfoEndpoint = "https://api.weixin.qq.com/sns/userinfo";
+
+        private static readonly ILog log = LogManager.GetLogger(typeof (WeiboClient));
 
         /// <summary>
         ///     The _app id.
@@ -98,8 +99,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             var collection = new NameValueCollection
                              {
                                  {"appid", _clientId},
-                //{"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
-                {"redirect_uri", "http://alpha.guangchi.net/account/ExternalLoginCallback"},
+                                 {"redirect_uri", returnUrl.GetLeftPart(UriPartial.Path)},
                                  {"response_type", "code"},
                                  {"scope", string.Join(" ", scopes)},
                                  {"state", state}
@@ -111,7 +111,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 
         protected override IDictionary<string, string> GetUserData(string accessToken)
         {
-            var openid = (string)HttpContext.Current.Session["openid"];
+            var openid = (string) HttpContext.Current.Session["openid"];
             var collection = new NameValueCollection
                              {
                                  {"access_token", accessToken},
@@ -123,14 +123,14 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
                             {
                                 {"id", openid},
                                 {"name", openid}
-                //{"nickname", user.nickname},
-                //{"sex", user.sex.ToString()},
-                //{"city", user.city},
-                //{"country", user.country},
-                //{"headimgurl", user.headimgurl},
-                //{"privilege", user.privilege.ToString()},
-                //{"unionid", user.unionid},
-            };
+                                //{"nickname", user.nickname},
+                                //{"sex", user.sex.ToString()},
+                                //{"city", user.city},
+                                //{"country", user.country},
+                                //{"headimgurl", user.headimgurl},
+                                //{"privilege", user.privilege.ToString()},
+                                //{"unionid", user.unionid},
+                            };
             return extraData;
         }
 
@@ -151,7 +151,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
                 return null;
             }
             var json = JObject.Parse(response);
-            if (!string.IsNullOrEmpty((string)json["errcode"]))
+            if (!string.IsNullOrEmpty((string) json["errcode"]))
             {
                 throw new Exception(response);
             }
