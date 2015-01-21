@@ -30,7 +30,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         /// </summary>
         private const string UserInfoEndpoint = "https://api.weixin.qq.com/sns/userinfo";
 
-        private static readonly ILog log = LogManager.GetLogger(typeof (WeiboClient));
+        private static readonly ILog log = LogManager.GetLogger(typeof (WeixinClient));
 
         /// <summary>
         ///     The _app id.
