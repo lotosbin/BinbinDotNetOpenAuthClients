@@ -1,4 +1,4 @@
-// <copyright file="PexAssemblyInfo.cs" company="lotosbin">Copyright ©  2013</copyright>
+// <copyright file="PexAssemblyInfo.cs" company="lotosbin">Copyright ? 2013</copyright>
 using Microsoft.Pex.Framework.Coverage;
 using Microsoft.Pex.Framework.Creatable;
 using Microsoft.Pex.Framework.Instrumentation;

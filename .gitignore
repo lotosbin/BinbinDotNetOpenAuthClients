@@ -108,3 +108,4 @@ Backup*/
 UpgradeLog*.XML
 *.nupkg
 /BinbinDotNetOpenAuthClients.sln.ide
+.vs/
