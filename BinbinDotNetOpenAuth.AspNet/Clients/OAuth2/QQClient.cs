@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Web;
 using DotNetOpenAuth.AspNet.Clients;
 using Newtonsoft.Json;
@@ -207,6 +208,14 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             {
                 throw new Exception("QQClient.GetOpenId error", ex);
             }
+        }
+
+        [DataContract]
+        [Serializable]
+        public class QQUserData
+        {
+            [DataMember]
+            public string nickname { get; set; }
         }
     }
 }

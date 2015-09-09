@@ -3,28 +3,31 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Web;
+using log4net;
 
 namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
-    internal static class UriHelper
+    public static class UriHelper
     {
-        public static Uri BuildUri(string baseUri, NameValueCollection queryParameters)
+        private static ILog log = LogManager.GetLogger(typeof(UriHelper));
+        public static Uri BuildUri(string baseUri, NameValueCollection queryParameters, string frangment = "")
         {
             NameValueCollection q = HttpUtility.ParseQueryString(String.Empty);
             q.Add(queryParameters);
             var builder = new UriBuilder(baseUri)
-                          {
-                              Query = q.ToString()
-                          };
+            {
+                Query = q.ToString(),
+                Fragment = frangment,
+            };
             return builder.Uri;
         }
 
-        internal static string OAuthPost(string endpoint, NameValueCollection collection)
+        public static string OAuthPost(string endpoint, NameValueCollection collection)
         {
             NameValueCollection postData = HttpUtility.ParseQueryString(String.Empty);
             postData.Add(collection);
 
-            var webRequest = (HttpWebRequest) WebRequest.Create(endpoint);
+            var webRequest = (HttpWebRequest)WebRequest.Create(endpoint);
 
             webRequest.Method = "POST";
             webRequest.ContentType = "application/x-www-form-urlencoded";
@@ -54,11 +57,46 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             return response;
         }
 
-        internal static string OAuthGet(string endpoint, NameValueCollection valueCollection)
+        public static string OAuthPostBearer(string endpoint, NameValueCollection collection, string accessToken)
+        {
+            NameValueCollection postData = HttpUtility.ParseQueryString(String.Empty);
+            postData.Add(collection);
+
+            var webRequest = (HttpWebRequest)WebRequest.Create(endpoint);
+            webRequest.Headers.Add("Authorization", "Bearer " + accessToken);
+            webRequest.Method = "POST";
+            webRequest.ContentType = "application/x-www-form-urlencoded";
+
+            using (Stream s = webRequest.GetRequestStream())
+            {
+                using (var sw = new StreamWriter(s))
+                {
+                    sw.Write(postData.ToString());
+                }
+            }
+
+            string response;
+            using (WebResponse webResponse = webRequest.GetResponse())
+            {
+                Stream responseStream = webResponse.GetResponseStream();
+                if (responseStream == null)
+                {
+                    return null;
+                }
+
+                using (var reader = new StreamReader(responseStream))
+                {
+                    response = reader.ReadToEnd();
+                }
+            }
+            return response;
+        }
+
+        public static string OAuthGet(string endpoint, NameValueCollection valueCollection)
         {
             Uri uri = BuildUri(endpoint, valueCollection);
-
-            var webRequest = (HttpWebRequest) WebRequest.Create(uri);
+            log.Debug("OAuthGet:" + uri);
+            var webRequest = (HttpWebRequest)WebRequest.Create(uri);
 
             string json;
             using (WebResponse webResponse = webRequest.GetResponse())
@@ -79,11 +117,12 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             return json;
         }
 
-        internal static string OAuthGetWithHeader(string endpoint, NameValueCollection valueCollection, string accessToken, string prefix = "Bearer ")
+        public static string OAuthGetBearer(string endpoint, NameValueCollection valueCollection, string accessToken)
         {
             Uri uri = BuildUri(endpoint, valueCollection);
 
-            var webRequest = (HttpWebRequest) WebRequest.Create(uri);
+            var webRequest = (HttpWebRequest)WebRequest.Create(uri);
+            string prefix = "bearer ";
             webRequest.Headers.Add("Authorization", prefix + accessToken);
             string json;
             using (WebResponse webResponse = webRequest.GetResponse())

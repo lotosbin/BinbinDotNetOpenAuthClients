@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Runtime.Serialization;
 using DotNetOpenAuth.AspNet.Clients;
 using log4net;
 using Newtonsoft.Json;
@@ -10,7 +11,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
 {
     public class DoubanClient : OAuth2Client
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(DoubanClient));
+        private static readonly ILog log = LogManager.GetLogger(typeof (DoubanClient));
 
         #region Constants and Fields
 
@@ -114,7 +115,7 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
         {
             log.Info("GetUserData");
             var collection = new NameValueCollection();
-            string json = UriHelper.OAuthGetWithHeader(UserInfoEndpoint, collection, accessToken, "Bearer ");
+            string json = UriHelper.OAuthGetBearer(UserInfoEndpoint, collection, accessToken);
             log.Info("response:" + json);
             var user = JsonConvert.DeserializeObject<DoubanUserData>(json);
             var extraData = new Dictionary<string, string>
@@ -145,6 +146,20 @@ namespace BinbinDotNetOpenAuth.AspNet.Clients
             JObject json = JObject.Parse(response);
             //HttpContext.Current.Session["uid"] = json.Value<string>("douban_user_id");
             return json.Value<string>("access_token");
+        }
+
+        [DataContract]
+        [Serializable]
+        public class DoubanUserData
+        {
+            [DataMember]
+            public string id { get; set; }
+
+            [DataMember]
+            public string uid { get; set; }
+
+            [DataMember]
+            public string name { get; set; }
         }
     }
 }

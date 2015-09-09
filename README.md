@@ -1,17 +1,16 @@
-BinbinDotNetOpenAuthClients
-===========================
+# BinbinDotNetOpenAuthClients
 
 
-支持列表
-========
+
+## 支持列表
 QQ
 Weibo
 Taobao
 
-
+## 安装
 PM> Install-Package BinbinDotNetOpenAuth.AspNet
 
-
+## 使用
 AccountController.cs
 
         [AllowAnonymous]
@@ -52,11 +51,13 @@ AccountController.cs
                     {"beta", "beta"}
                 });    
 
-参考资料
-========
-qq connect登录
+## 参考资料
+
+### qq connect登录
 http://wiki.connect.qq.com/oauth2-0%E7%AE%80%E4%BB%8B
 
-qq open
+### qq open
 http://wiki.open.qq.com/wiki/website/OAuth2.0%E7%AE%80%E4%BB%8B
 
+### 微信
+http://mp.weixin.qq.com/wiki/17/c0f37d5704f0b64713d5d2c37b468d75.html

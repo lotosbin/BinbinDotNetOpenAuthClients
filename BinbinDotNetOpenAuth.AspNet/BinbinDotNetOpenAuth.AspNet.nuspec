@@ -11,7 +11,7 @@
     <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>支持sohu 微博登录</releaseNotes>
+    <releaseNotes>支持微信登录 </releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>OAuth DotNetOpenAuth Tencent QQ Sina Weibo Taobao Alipay douban sohu sohuweibo</tags>
   </metadata>
